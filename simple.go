@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/ChimeraCoder/anaconda"
+	"github.com/wskinner/anaconda"
 	"fmt"
+	"net/url"
 )
 
 func getApi() *anaconda.TwitterApi {
@@ -17,7 +18,8 @@ func main() {
 
 	api := getApi()
 
-	mentions, _ := api.GetStatusesMentionsTimeline()
+	v := url.Values{}
+	mentions, _ := api.GetStatusesMentionsTimeline(v)
 	for _, tweet := range mentions {
 		fmt.Println(tweet.Text)
 	}
