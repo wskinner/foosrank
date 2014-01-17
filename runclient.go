@@ -1,7 +1,7 @@
 package main
 import (
 	"github.com/wskinner/anaconda"
-	"github.com/wskinner/foosrank"
+	"github.com/wskinner/foosrank/foosrank"
 	"time"
 	"fmt"
 	"runtime"

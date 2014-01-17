@@ -5,12 +5,30 @@ import (
 	"time"
 	"fmt"
 	"net/url"
+	"encoding/json"
+	"io/ioutil"
+	"os"
 )
 
+type TwitterCreds struct {
+	ConsumerKey string
+	ConsumerSecret string
+	AccessToken string
+	AccessTokenSecret string
+}
+
 func GetApi() *anaconda.TwitterApi {
-	anaconda.SetConsumerKey("WyWJsRBoWWQvnG8jnoO0bA")
-	anaconda.SetConsumerSecret("1QxBiTHqcy5jeMgFzxwJyon5tdThphRzzOlmxiW3qG8")
-	var api *anaconda.TwitterApi = anaconda.NewTwitterApi("2295398977-RCw9S9GM5UZ2lkQC3prlNfAKWgnaUdoRdcBEh6k", "olpgzfjU4a47f67kJQh7TrZ5ZjvOVE1RLUaD0RpbyD4JH")
+	file, e := ioutil.ReadFile("credentials.json")
+	if e != nil {
+		fmt.Printf("File error: %v\n", e)
+		os.Exit(1)
+	}
+	var creds TwitterCreds
+	json.Unmarshal(file, &creds)
+	fmt.Println(creds)
+	anaconda.SetConsumerKey(creds.ConsumerKey)
+	anaconda.SetConsumerSecret(creds.ConsumerSecret)
+	var api *anaconda.TwitterApi = anaconda.NewTwitterApi(creds.AccessToken, creds.AccessTokenSecret)
 
 	return api
 }
