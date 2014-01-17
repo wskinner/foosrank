@@ -15,8 +15,12 @@ func main() {
 	if err == nil {
 		fmt.Println("error was nil")
 		go foosrank.PollAtInterval(foosrank.GetApi(), dur, tweetChan)
-		for {
-			runtime.Gosched()
-		}
+	}
+
+	go foosrank.ParseTweets(tweetChan)
+	
+	// infinite loop
+	for {
+		runtime.Gosched()
 	}
 }
