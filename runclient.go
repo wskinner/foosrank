@@ -11,13 +11,16 @@ import (
 func main() {
 	fmt.Println("starting")
 	tweetChan := make(chan anaconda.Tweet, 10)
-	dur, err := time.ParseDuration("5000ms")
-	if err == nil {
-		fmt.Println("error was nil")
-		go foosrank.PollAtInterval(foosrank.GetApi(), dur, tweetChan)
+	parsedChan := make(chan foosrank.Game, 10)
+
+	// 30 second intervals
+	dur, err := time.ParseDuration("30000ms")
+	if err != nil {
+		fmt.Printf("Error: %v\n")
 	}
 
-	go foosrank.ParseTweets(tweetChan)
+	go foosrank.PollAtInterval(foosrank.GetApi(), dur, tweetChan)
+	go foosrank.ParseTweets(tweetChan, parsedChan)
 	
 	// infinite loop
 	for {

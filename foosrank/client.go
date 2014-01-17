@@ -38,12 +38,13 @@ func pollTwitter(api *anaconda.TwitterApi) []anaconda.Tweet {
 	v := url.Values{}
 
 	// should be more than enough
-	v.Set("count", "50")
+	// v.Set("count", "")
 	mentions, _ := api.GetStatusesMentionsTimeline(v)
 	return mentions
 }
 
 func PollAtInterval(api *anaconda.TwitterApi, sleepTime time.Duration, tweetQueue chan anaconda.Tweet) {
+	fmt.Println("in PollAtInterval")
 	for {
 		mentions := pollTwitter(api)
 		fmt.Println("got ", len(mentions), " mentions")
