@@ -18,7 +18,7 @@ var (
 )
 
 type Leaderboard struct {
-	Players [2]string
+	Players []string
 }
 
 func defaultAssetPath() string {
@@ -40,7 +40,7 @@ func Run() {
 	
 	// Just feed some jsons in there every 5 seconds
 	go func() {
-		players := [2]string{"Will", "Michael"}
+		players := []string{"Will", "Michael"}
 		msg, _ := json.Marshal(Leaderboard {Players: players})
 		dur, _ := time.ParseDuration("5s")
 		for {
