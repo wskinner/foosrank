@@ -28,6 +28,20 @@ func readGameFile() {
 	    winner := game.Winner
 	    loser := game.Loser
         fmt.Println(winner, loser)
+        
+        if (players[winner]) {
+            fmt.Println("skipping", winner)
+        } else {
+            players[winner] = true
+            fmt.Println("adding", winner)
+        }
+        
+        if (players[loser]) {
+            fmt.Println("skipping", loser)
+        } else {
+            fmt.Println("adding", loser)
+            players[loser] = true
+        }
     }
 }
 
