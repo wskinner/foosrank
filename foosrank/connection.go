@@ -2,7 +2,6 @@ package foosrank
 
 import (
 	"github.com/gorilla/websocket"
-	"net/http"
 )
 
 type connection struct {
@@ -39,19 +38,3 @@ func (c *connection) writer() {
 	c.ws.Close()
 }
 
-// This is going to be setup as the handler for /ws
-func wsHandler(w http.ResponseWriter, r *http.Request) {
-	ws, err := websocket.Upgrade(w, r, nil, 1024, 1024)
-	if _, ok := err.(websocket.HandshakeError); ok {
-		http.Error(w, "Not a websocket handshake", 400)
-		return
-	} else if err != nil {
-		return
-	}
-
-	c := &connection{send: make(chan []byte, 256), ws: ws}
-	h.register <- c
-	defer func() { h.unregister <-c }()
-	go c.writer()
-	c.reader()
-}

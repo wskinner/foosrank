@@ -1,0 +1,73 @@
+<html>
+<head>
+<title>Foosball Leaderboard</title>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript">
+    $(function() {
+
+    var conn;
+    var msg = $("#msg");
+    var leaderboard = $("#leaderboard");
+		
+		// Redraw the leaderboard based on the rankings in arr
+		function updateLeaderboard(obj) {
+		var players = obj.Players
+
+		// delete the old list
+		var old = document.getElementById("leaderboard")
+		old.parentNode.removeChild(old)
+		
+		var container = document.getElementById("leaderboardContainer");
+		var newList = document.createElement("ul")
+		newList.setAttribute("id", "leaderboard")
+		container.appendChild(newList)
+
+		for( var i =  0 ; i < players.length ; ++i){
+
+			var listItem = document.createElement("li");
+			var link = document.createElement("a");
+
+			var name = players[i].Player.FirstName + " " + players[i].Player.LastName
+			var rank = players[i].PlayerRank.Rank
+
+			link.setAttribute("href", "/players/" + players[i].PlayerId);
+			link.innerHTML = name + " - " + rank
+			listItem.appendChild(link);
+			newList.appendChild(listItem);
+			}
+		}
+
+    if (window["WebSocket"]) {
+        conn = new WebSocket("ws://{{$}}/ws");
+        conn.onclose = function(evt) {
+            console.log("connection closed")
+        }
+				conn.onmessage = function(evt) {
+						console.log("got data: " + evt.data)
+						updateLeaderboard(JSON.parse(evt.data))
+        }
+    } else {
+        appendLog($("<div><b>Your browser does not support WebSockets.</b></div>"))
+    }
+    });
+	</script>
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+	<style type="text/css">
+		body { background-color: yellow; }
+		#leaderboardLabel { text-align: center; color: blue; font-size: 40px; }
+		#leaderboard { text-align: center; color: navy; font-size: 20px; }
+		ul { list-style-type: decimal; }
+
+</style>
+
+</head>
+<body>
+	<div id="leaderboardLabel">
+		Leaderboard
+	</div>
+	<div align=center id="leaderboardContainer">
+		<ul id="leaderboard" >
+		</ul>
+	</div>
+</body>
+</html>

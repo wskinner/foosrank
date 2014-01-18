@@ -15,6 +15,7 @@ type Game struct {
 type RankedPlayer struct {
     Player Player
     PlayerRank EloRank
+    PlayerId int64 // who knows, maybe we will have billions of players
 }
 
 type EloRank struct {
