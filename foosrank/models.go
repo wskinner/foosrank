@@ -21,6 +21,10 @@ type RankedPlayer struct {
     PlayerRank Rank
 }
 
+type EloRank struct {
+	Rank int
+}
+
 type Rank struct {
     Mean float64
     StdDev float64
