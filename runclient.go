@@ -21,6 +21,8 @@ func main() {
 
 	go foosrank.PollAtInterval(foosrank.GetApi(), dur, tweetChan)
 	go foosrank.ParseTweets(tweetChan, parsedChan)
+
+	go foosrank.Engine(parsedChan)
 	
 	// infinite loop
 	for {
