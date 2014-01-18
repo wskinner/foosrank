@@ -11,9 +11,13 @@ type Game struct {
 	Loser Player
 }
 
-type RankedPlayer struct {
+type Person struct {
     FirstName string
     LastName string
+}
+
+type RankedPlayer struct {
+    Player Person
     PlayerRank Rank
 }
 

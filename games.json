@@ -1,0 +1,24 @@
+[{ 
+    "Winner": {
+        "FirstName": "Will",
+        "LastName": "Skinner",
+        "Score": 8
+    },
+    "Loser": {
+        "FirstName": "Michael",
+        "LastName": "Schiff",
+        "Score": 6
+    }
+},
+{
+    "Winner": {
+        "FirstName": "Michael",
+        "LastName": "Schiff",
+        "Score": 8
+    },
+    "Loser": {
+        "FirstName": "Will",
+        "LastName": "Skinner",
+        "Score": 6
+    }
+}]
