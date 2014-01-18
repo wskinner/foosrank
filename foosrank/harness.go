@@ -14,7 +14,7 @@ import (
 var leaderBoard = list.New()
 
 //a map of Person to RankedPlayer list Element
-var players = make(map[Person]bool)
+var players = make(map[Player]bool)
 
 func readGameFile() {
     file, err := ioutil.ReadFile("games.json")
