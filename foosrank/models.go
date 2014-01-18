@@ -11,3 +11,13 @@ type Game struct {
 	Loser Player
 }
 
+type RankedPlayer struct {
+    FirstName string
+    LastName string
+    PlayerRank Rank
+}
+
+type Rank struct {
+    Mean float64
+    StdDev float64
+}

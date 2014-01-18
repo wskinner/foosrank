@@ -4,7 +4,7 @@ import (
     "os"
 )
 
-func getLog() *File {
+func getLog() *os.File {
     file, err := os.Open("games.log")
     if err == nil {
         return file
@@ -15,7 +15,7 @@ func getLog() *File {
 
 //will ultimately output to a chan, just dont know what type yet
 func ReadGames (gamesChan chan Game) {
-    logFile *File = getLog()
+    logFile *os.File = getLog()
     for game := range gamesChan {
        //log game to master record
        //add ranks to game players
