@@ -17,10 +17,6 @@ var (
 	homeTempl *template.Template
 )
 
-type Leaderboard struct {
-	Players []string
-}
-
 func defaultAssetPath() string {
 	p, err := build.Default.Import("github.com/wskinner/foosrank/foosrank", "", build.FindOnly)
 	if err != nil {
@@ -40,8 +36,16 @@ func Run() {
 	
 	// Just feed some jsons in there every 5 seconds
 	go func() {
-		players := []string{"Will", "Michael"}
-		msg, _ := json.Marshal(Leaderboard {Players: players})
+		p1 := Player{"Will", "Skinner"}
+		r1 := EloRank{1500}
+		rp1 := RankedPlayer{p1, r1}
+
+		p2 := Player{"Michael", "Schiff"}
+		r2 := EloRank{1500}
+		rp2 := RankedPlayer{p2, r2}
+
+		leaderboard := Leaderboard{[]RankedPlayer{rp1, rp2}}
+		msg, _ := json.Marshal(leaderboard)
 		dur, _ := time.ParseDuration("5s")
 		for {
 			h.broadcast <- msg

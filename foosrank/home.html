@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>Chat Example</title>
+<title>Foosball Leaderboard</title>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 <script type="text/javascript">
     $(function() {
@@ -10,7 +10,8 @@
     var leaderboard = $("#leaderboard");
 		
 		// Redraw the leaderboard based on the rankings in arr
-		function updateLeaderboard(arr) {
+		function updateLeaderboard(obj) {
+		var players = obj.Players
 
 		// delete the old list
 		var old = document.getElementById("leaderboard")
@@ -18,12 +19,14 @@
 		
 		var container = document.getElementById("leaderboardContainer");
 		var newList = document.createElement("ul")
-		newList.setAttribute("id", "leaderboardContainer")
+		newList.setAttribute("id", "leaderboard")
 		container.appendChild(newList)
 
-			for( var i =  0 ; i < arr.length ; ++i){
-					var listItem = document.createElement("li");
-					listItem.innerHTML = arr[i];
+			for( var i =  0 ; i < players.length ; ++i){
+			var listItem = document.createElement("li");
+			var name = players[i].Player.FirstName + " " + players[i].Player.LastName
+				var rank = players[i].PlayerRank.Rank
+					listItem.innerHTML = name + " - " + rank
 					newList.appendChild(listItem);
 			}
 		}
@@ -35,16 +38,27 @@
         }
 				conn.onmessage = function(evt) {
 						console.log("got data: " + evt.data)
-						updateLeaderboard(JSON.parse(evt.data).Players)
+						updateLeaderboard(JSON.parse(evt.data))
         }
     } else {
         appendLog($("<div><b>Your browser does not support WebSockets.</b></div>"))
     }
     });
 	</script>
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+	<style type="text/css">
+		body { background-color: yellow; }
+		#leaderboardLabel { text-align: center; color: blue; font-size: 40px; }
+		#leaderboard { text-align: center; color: navy; font-size: 20px; }
+		ul { list-style-type: decimal; }
+
+</style>
 
 </head>
 <body>
+	<div id="leaderboardLabel">
+		Leaderboard
+	</div>
 	<div align=center id="leaderboardContainer">
 		<ul id="leaderboard" >
 		</ul>

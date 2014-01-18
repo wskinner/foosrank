@@ -14,7 +14,7 @@ type Game struct {
 
 type RankedPlayer struct {
     Player Player
-    PlayerRank Rank
+    PlayerRank EloRank
 }
 
 type EloRank struct {
@@ -24,4 +24,9 @@ type EloRank struct {
 type Rank struct {
     Mean float64
     StdDev float64
+}
+
+// This should be serialized and sent to the client
+type Leaderboard struct {
+	Players []RankedPlayer
 }
