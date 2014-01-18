@@ -8,8 +8,10 @@ import (
     "container/list"
 )
 
+
+
 var leaderBoard = list.New()
-var players = make(map[RankedPlayer]bool)
+var players = make(map[RankedPlayer]*list.Element)
 
 func readGameFile() {
     file, err := ioutil.ReadFile("games.json")
@@ -19,7 +21,12 @@ func readGameFile() {
     }
     var games []Game = make([]Game, 10)
     json.Unmarshal(file, &games)
-    fmt.Println(games)
+    for _, game := range games {
+        var winner = Person{game.Winner.FirstName, game.Winner.LastName}
+        var loser = Person{game.Loser.FirstName, game.Loser.LastName}
+        fmt.Println(winner, loser)
+
+    }
 }
 
 
