@@ -10,8 +10,11 @@ import (
 
 
 
+//an ordered list of RankedPlayers
 var leaderBoard = list.New()
-var players = make(map[RankedPlayer]*list.Element)
+
+//a map of Person to RankedPlayer list Element
+var players = make(map[Person]bool)
 
 func readGameFile() {
     file, err := ioutil.ReadFile("games.json")
@@ -25,10 +28,8 @@ func readGameFile() {
 	    winner := game.Winner
 	    loser := game.Loser
         fmt.Println(winner, loser)
-
     }
 }
-
 
 //will ultimately output to a chan, just dont know what type yet
 func ReadGames (gamesChan chan Game) {
