@@ -4,24 +4,34 @@ package foosrank
 
 import (
     "os"
+    "fmt"
+    "io/ioutil"
+    "encoding/json"
+    "container/list"
 )
 
-func getLog() *os.File {
-    file, err := os.Open("games.log")
-    if err == nil {
-        return file
-    } else {
-        return nil
+var leaderBoard = list.New()
+var players = make(map[RankedPlayer]bool)
+
+func readGameFile() {
+    file, err := ioutil.ReadFile("games.json")
+    if err != nil {
+        fmt.Printf("File error: %v\n", err)
+        os.Exit(1)
     }
+    var games []Game
+    json.Unmarshal(file, games)
+    fmt.Println(games)
 }
+
 
 //will ultimately output to a chan, just dont know what type yet
 func ReadGames (gamesChan chan Game) {
-    logFile *os.File = getLog()
-    for game := range gamesChan {
+    readGameFile()
+    //for game := range gamesChan {
        //log game to master record
        //add ranks to game players
        //ask ranking function for updated ranks
        //update and publish leaderboard
-    }
+    //}
 }
