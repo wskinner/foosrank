@@ -3,21 +3,17 @@ package foosrank
 type Player struct {
 	FirstName string
 	LastName string
-	Score int
 }
 
 type Game struct {
 	Winner Player
 	Loser Player
-}
-
-type Person struct {
-    FirstName string
-    LastName string
+	WinnerScore int
+	LoserScore int
 }
 
 type RankedPlayer struct {
-    Player Person
+    Player Player
     PlayerRank Rank
 }
 

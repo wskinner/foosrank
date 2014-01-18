@@ -22,8 +22,8 @@ func readGameFile() {
     var games []Game = make([]Game, 10)
     json.Unmarshal(file, &games)
     for _, game := range games {
-        var winner = Person{game.Winner.FirstName, game.Winner.LastName}
-        var loser = Person{game.Loser.FirstName, game.Loser.LastName}
+	    winner := game.Winner
+	    loser := game.Loser
         fmt.Println(winner, loser)
 
     }

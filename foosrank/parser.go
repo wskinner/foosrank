@@ -12,7 +12,7 @@ import (
 // Matches and captures the form:
 // fname [lname] score fname [lname] score
 func GetTweetEntities(tweetstr string) ([]string, error) {
-	matchstr := "([a-zA-Z]+)\\s([a-zA-Z]+\\s)?([0-9]+)\\s([a-zA-Z]+)\\s([a-zA-Z]+\\s)?([0-9]+)"
+	matchstr := "([@a-zA-Z]+)\\s([@a-zA-Z]+\\s)?([0-9]+)\\s([@a-zA-Z]+)\\s([@a-zA-Z]+\\s)?([0-9]+)"
 	matcher, err := regexp.Compile(matchstr)
 	if err != nil {
 		fmt.Printf("Error compile regular expression: %v\n", err)
@@ -44,22 +44,17 @@ func updateString(p *Player, val string) error {
 	return err
 }
 
-func updateInt(p *Player, val int) error {
-	var err error = nil
-	(*p).Score = val
-	return err
-}
-
-func GetPlayers(groups []string) (Player, Player, error) {
+// Return (winner, loser, winnerscore, loserscore, error)
+func GetPlayers(groups []string) (Player, Player, int, int, error) {
 	var err error = nil
 	var p1 Player
 	var p2 Player
+	var s1 int
+	var s2 int
 
-	p1.Score = -1
-	p2.Score = -1
-	
 	p1ScoreSet := false
 	for _, s := range groups {
+		fmt.Println(s)
 		// it's a @mention, so skip it
 		if strings.HasPrefix(s, "@") {
 			continue
@@ -68,9 +63,9 @@ func GetPlayers(groups []string) (Player, Player, error) {
 		// it's an int
 		if e == nil {
 			if p1ScoreSet {
-				err = updateInt(&p2, int(i))
+				s2 = int(i)
 			} else {
-				err = updateInt(&p1, int(i))
+				s1 = int(i)
 				p1ScoreSet = true
 			}
 		// it's a string
@@ -83,15 +78,12 @@ func GetPlayers(groups []string) (Player, Player, error) {
 		}
 	}
 
-	if err == nil {
-		if p1.Score > p2.Score {
-			return p1, p2, nil
-		} else {
-			return p2, p1, nil
-		}
-	} 
+	if s1 > s2 {
+		return p1, p2, s1, s2, err
+	} else {
+		return p2, p1, s2, s1, err
+	}
 
-	return p1, p2, err
 
 }
 
@@ -102,9 +94,7 @@ func parseTweet(tweet anaconda.Tweet) (Game, error) {
 		return game, err
 	}
 
-	winner, loser, err := GetPlayers(groups)
-	game.Winner = winner
-	game.Loser = loser
+	game.Winner, game.Loser, game.WinnerScore, game.LoserScore, err = GetPlayers(groups)
 
 	fmt.Printf("parsed a game:\n%+v\n", game)
 	
