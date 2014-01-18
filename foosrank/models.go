@@ -14,17 +14,27 @@ type Game struct {
 
 type RankedPlayer struct {
     Player Player
-    PlayerRank EloRank
+    PlayerRank Rank
     PlayerId int64 // who knows, maybe we will have billions of players
 }
 
-type EloRank struct {
-	Rank int
+type Rank interface {
+    Rank() int
 }
 
-type Rank struct {
-    Mean float64
-    StdDev float64
+type EloRank struct {
+	Value int
+}
+func (eloRank EloRank) Rank() int {
+    return eloRank.Value
+}
+
+type TrueSkillRank struct {
+    Mean int
+    StdDev int
+}
+func (trueSkill TrueSkillRank) Rank() int {
+    return trueSkill.Mean
 }
 
 // This should be serialized and sent to the client
