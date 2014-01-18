@@ -1,5 +1,3 @@
-// +build ignore
-
 package foosrank
 
 import (
@@ -19,8 +17,8 @@ func readGameFile() {
         fmt.Printf("File error: %v\n", err)
         os.Exit(1)
     }
-    var games []Game
-    json.Unmarshal(file, games)
+    var games []Game = make([]Game, 10)
+    json.Unmarshal(file, &games)
     fmt.Println(games)
 }
 
