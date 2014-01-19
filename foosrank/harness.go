@@ -5,12 +5,19 @@ import (
     "fmt"
     "io/ioutil"
     "encoding/json"
-//    "sort"
+    "sort"
 )
 
 //an ordered list of RankedPlayers
-var leaderboard = make([]*RankedPlayer, 10)
-//func (x []RankedPlayer) 
+type rankedPlayerSlice []*RankedPlayer
+var leaderboard = make(rankedPlayerSlice, 0)
+func (x rankedPlayerSlice) Len() int { return len(x) }
+func (x rankedPlayerSlice) Less(i, j int) bool { return (x[i].PlayerRank.Value > x[j].PlayerRank.Value) }
+func (x rankedPlayerSlice) Swap(i, j int) {
+    var temp = x[i]
+    x[i] = x[j]
+    x[j] = temp
+}
 
 
 //a map of Person to RankedPlayer list Element
@@ -27,14 +34,15 @@ func readGameFile(rankingFunc RankingFunction) {
     for _, game := range games {
         updateGame(&game, rankingFunc)
     }
-  //  sort.Sort(leaderboard)
+    fmt.Println(leaderboard)
+    sort.Sort(leaderboard)
 }
 
 func updateGame(game *Game, rankingFunc RankingFunction) {
     winner := game.Winner
     loser := game.Loser
-    rankedWinner := addPlayer(winner, players, leaderboard)
-    rankedLoser := addPlayer(loser, players, leaderboard)
+    rankedWinner := addPlayer(winner, players, &leaderboard)
+    rankedLoser := addPlayer(loser, players, &leaderboard)
     fmt.Println("before re-ranking: ", *rankedWinner, *rankedLoser)
     winnerNewRank, loserNewRank := rankingFunc(rankedWinner.PlayerRank.Value, rankedLoser.PlayerRank.Value)
     rankedWinner.PlayerRank.Value = winnerNewRank
@@ -43,7 +51,7 @@ func updateGame(game *Game, rankingFunc RankingFunction) {
 }
 
 
-func addPlayer(p Player, ps map[Player]*RankedPlayer, leaders []*RankedPlayer) *RankedPlayer{
+func addPlayer(p Player, ps map[Player]*RankedPlayer, leaders *rankedPlayerSlice) *RankedPlayer{
     if (ps[p] != nil) {
         fmt.Println("player: ", p, " already exists")
         return ps[p]
@@ -51,7 +59,7 @@ func addPlayer(p Player, ps map[Player]*RankedPlayer, leaders []*RankedPlayer) *
         var rank = EloRank{1} //1 is default rank I guess
         var rankedPlayer = RankedPlayer{p, rank} //construct ranked player
         ps[p] = &rankedPlayer
-        leaders = append(leaders, &rankedPlayer)
+        *leaders = append(*leaders, &rankedPlayer)
         fmt.Println("added player: ", p)
         return ps[p]
     }

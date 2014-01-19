@@ -49,3 +49,4 @@ type RankingFunction func(int, int) (int, int)
 type Leaderboard struct {
 	Players []RankedPlayer
 }
+
