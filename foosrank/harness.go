@@ -5,17 +5,16 @@ import (
     "fmt"
     "io/ioutil"
     "encoding/json"
-    "container/list"
     //"sort"
 )
 
 
 
 //an ordered list of RankedPlayers
-var leaderboard = list.New()
+var leaderboard = make([]RankedPlayer, 10)
 
 //a map of Person to RankedPlayer list Element
-var players = make(map[Player]*list.Element)
+var players = make(map[Player]*RankedPlayer)
 
 func readGameFile(rankingFunc RankingFunction) {
     file, err := ioutil.ReadFile("games.json")
@@ -26,27 +25,31 @@ func readGameFile(rankingFunc RankingFunction) {
     var games []Game = make([]Game, 10)
     json.Unmarshal(file, &games)
     for _, game := range games {
-	    winner := game.Winner
-	    loser := game.Loser
-        rankedWinner := addPlayer(winner, players, leaderboard).Value.(RankedPlayer)
-        rankedLoser := addPlayer(loser, players, leaderboard).Value.(RankedPlayer)
-        fmt.Println(rankedWinner, rankedLoser)
-        winnerNewRank, loserNewRank := rankingFunc(rankedWinner.PlayerRank.Value, rankedLoser.PlayerRank.Value)
-        fmt.Println(winnerNewRank, loserNewRank)
+        updateGame(&game, rankingFunc)
     }
     //sort.Sort(leaderboard) //need to implement Sort interface for my list
 }
 
-//TODO: implement updateGame function, does the stuff above since is reusable
+func updateGame(game *Game, rankingFunc RankingFunction) (int, int) {
+    winner := game.Winner
+    loser := game.Loser
+    rankedWinner := addPlayer(winner, players, leaderboard)
+    rankedLoser := addPlayer(loser, players, leaderboard)
+    fmt.Println(*rankedWinner, *rankedLoser)
+    winnerNewRank, loserNewRank := rankingFunc(rankedWinner.PlayerRank.Value, rankedLoser.PlayerRank.Value)
+    return winnerNewRank, loserNewRank
+}
 
-func addPlayer(p Player, ps map[Player]*list.Element, leaders *list.List) *list.Element{
+
+func addPlayer(p Player, ps map[Player]*RankedPlayer, leaders []RankedPlayer) *RankedPlayer{
     if (ps[p] != nil) {
         fmt.Println("player: ", p, " already exists")
         return ps[p]
     } else {
         var rank = EloRank{1} //1 is default rank I guess
         var rankedPlayer = RankedPlayer{p, rank} //construct ranked player
-        ps[p] = leaders.PushBack(rankedPlayer) //map player to ranked player
+        ps[p] = &rankedPlayer
+        leaders = append(leaders, rankedPlayer)
         fmt.Println("added player: ", p)
         return ps[p]
     }
@@ -59,8 +62,8 @@ func ReadGames (gamesChan chan Game, rankingFunc RankingFunction) {
     readGameFile(rankingFunc)
     //for game := range gamesChan {
        //log game to master record
-       //add ranks to game players
-       //ask ranking function for updated ranks
-       //update and publish leaderboard
+       //updateGame(&game, rankingFunc)
+       //sort
+       //publish leaderboard
     //}
 }
