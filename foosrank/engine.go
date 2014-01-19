@@ -16,15 +16,15 @@ func RunServer(leaderboardChan chan []RankedPlayer) {
 	go h.run()
 	
     go func() {
-	    http.HandleFunc("/", homeHandler)
-	    http.HandleFunc("/ws", wsHandler)
-	    http.HandleFunc("/players/", playersHandler)
-	    if err := http.ListenAndServe(*addr, nil); err != nil {
-		    log.Fatal("ListenAndServe:", err)
-	    }
         for leaderboard := range leaderboardChan {
 		    msg, _ := json.Marshal(leaderboard)
             h.broadcast <- msg
 	    }
     }()
+    http.HandleFunc("/", homeHandler)
+	http.HandleFunc("/ws", wsHandler)
+	http.HandleFunc("/players/", playersHandler)
+	if err := http.ListenAndServe(*addr, nil); err != nil {
+		log.Fatal("ListenAndServe:", err)
+	}
 }
