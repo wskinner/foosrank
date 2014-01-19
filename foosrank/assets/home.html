@@ -28,7 +28,7 @@
 			var link = document.createElement("a");
 
 			var name = players[i].Player.FirstName + " " + players[i].Player.LastName
-			var rank = players[i].PlayerRank.Rank
+			var rank = players[i].PlayerRank.Value
 
 			link.setAttribute("href", "/players/" + players[i].PlayerId);
 			link.innerHTML = name + " - " + rank
