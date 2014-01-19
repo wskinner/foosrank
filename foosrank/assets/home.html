@@ -29,7 +29,7 @@
 			var name = players[i].Player.FirstName + " " + players[i].Player.LastName
 			var rank = players[i].PlayerRank.Value
 
-			link.setAttribute("href", "/players/" + players[i].PlayerId);
+			link.setAttribute("href", "/players/" + players[i].Player.PlayerId);
 			link.innerHTML = name + " - " + rank
 			listItem.appendChild(link);
 			newList.appendChild(listItem);
