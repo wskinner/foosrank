@@ -78,7 +78,9 @@ func GetPlayers(groups []string) (Player, Player, int, int, error) {
 		}
 	}
 
-	if s1 > s2 {
+	p1.PlayerId = p1.FirstName+p1.LastName
+    p2.PlayerId = p2.FirstName+p2.LastName
+    if s1 > s2 {
 		return p1, p2, s1, s2, err
 	} else {
 		return p2, p1, s2, s1, err
