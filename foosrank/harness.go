@@ -5,13 +5,13 @@ import (
     "fmt"
     "io/ioutil"
     "encoding/json"
-    //"sort"
+//    "sort"
 )
 
-
-
 //an ordered list of RankedPlayers
-var leaderboard = make([]RankedPlayer, 10)
+var leaderboard = make([]*RankedPlayer, 10)
+//func (x []RankedPlayer) 
+
 
 //a map of Person to RankedPlayer list Element
 var players = make(map[Player]*RankedPlayer)
@@ -27,21 +27,23 @@ func readGameFile(rankingFunc RankingFunction) {
     for _, game := range games {
         updateGame(&game, rankingFunc)
     }
-    //sort.Sort(leaderboard) //need to implement Sort interface for my list
+  //  sort.Sort(leaderboard)
 }
 
-func updateGame(game *Game, rankingFunc RankingFunction) (int, int) {
+func updateGame(game *Game, rankingFunc RankingFunction) {
     winner := game.Winner
     loser := game.Loser
     rankedWinner := addPlayer(winner, players, leaderboard)
     rankedLoser := addPlayer(loser, players, leaderboard)
-    fmt.Println(*rankedWinner, *rankedLoser)
+    fmt.Println("before re-ranking: ", *rankedWinner, *rankedLoser)
     winnerNewRank, loserNewRank := rankingFunc(rankedWinner.PlayerRank.Value, rankedLoser.PlayerRank.Value)
-    return winnerNewRank, loserNewRank
+    rankedWinner.PlayerRank.Value = winnerNewRank
+    rankedLoser.PlayerRank.Value = loserNewRank
+    fmt.Println("after re-ranking: ", *rankedWinner, *rankedLoser)
 }
 
 
-func addPlayer(p Player, ps map[Player]*RankedPlayer, leaders []RankedPlayer) *RankedPlayer{
+func addPlayer(p Player, ps map[Player]*RankedPlayer, leaders []*RankedPlayer) *RankedPlayer{
     if (ps[p] != nil) {
         fmt.Println("player: ", p, " already exists")
         return ps[p]
@@ -49,7 +51,7 @@ func addPlayer(p Player, ps map[Player]*RankedPlayer, leaders []RankedPlayer) *R
         var rank = EloRank{1} //1 is default rank I guess
         var rankedPlayer = RankedPlayer{p, rank} //construct ranked player
         ps[p] = &rankedPlayer
-        leaders = append(leaders, rankedPlayer)
+        leaders = append(leaders, &rankedPlayer)
         fmt.Println("added player: ", p)
         return ps[p]
     }
