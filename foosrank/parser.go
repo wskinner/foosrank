@@ -18,9 +18,7 @@ func GetTweetEntities(tweetstr string) ([]string, error) {
 		fmt.Printf("Error compile regular expression: %v\n", err)
 		return nil, err
 	}
-
-	matched := matcher.FindStringSubmatch(tweetstr)
-	
+    matched := matcher.FindStringSubmatch(tweetstr)
 	// Should have at least 2 first names and 2 scores
 	// 5 because the first index is occupied by entire string
 	if len(matched) < 5 {
