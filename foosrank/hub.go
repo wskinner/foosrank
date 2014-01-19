@@ -1,5 +1,9 @@
 package foosrank
 
+import (
+	"encoding/json"
+)
+
 type hub struct {
 	// Registered connections
 	connections map[*connection]bool
@@ -12,6 +16,9 @@ type hub struct {
 
 	// Unregister requests from the connections
 	unregister chan *connection
+
+	// The current leaderboard
+	currentLeaderboard []RankedPlayer
 }
 
 var h = hub {
@@ -26,6 +33,8 @@ func (h *hub) run() {
 		select {
 		case c := <-h.register:
 			h.connections[c] = true
+			msg, _ := json.Marshal(h.currentLeaderboard)
+			c.send <- msg
 		case c := <-h.unregister:
 			delete(h.connections, c)
 		case m := <-h.broadcast:
