@@ -8,9 +8,7 @@ import (
     "sort"
 )
 
-//an ordered list of RankedPlayers
 type rankedPlayerSlice []*RankedPlayer
-var leaderboard = make(rankedPlayerSlice, 0)
 func (x rankedPlayerSlice) Len() int { return len(x) }
 func (x rankedPlayerSlice) Less(i, j int) bool { return (x[i].PlayerRank.Value > x[j].PlayerRank.Value) }
 func (x rankedPlayerSlice) Swap(i, j int) {
@@ -19,10 +17,14 @@ func (x rankedPlayerSlice) Swap(i, j int) {
     x[j] = temp
 }
 
-
-//a map of Person to RankedPlayer list Element
+//a map of Player (soon a unique id field in a player) to *RankedPlayer in leaderboard
 var players = make(map[Player]*RankedPlayer)
 
+//a sorted slice of RankedPlayers
+var leaderboard = make(rankedPlayerSlice, 0)
+
+//loads games out of file, updates the leaderboard for each game, 
+//then resorts leaderboard after all updates
 func readGameFile(rankingFunc RankingFunction) {
     file, err := ioutil.ReadFile("games.json")
     if err != nil {
@@ -38,6 +40,8 @@ func readGameFile(rankingFunc RankingFunction) {
     sort.Sort(leaderboard)
 }
 
+//gets the pointer to RankedPlayer from players map (via addPlayer)
+//finds new rank for players, and updates the RankedPlayer structs in the leaderboard
 func updateGame(game *Game, rankingFunc RankingFunction) {
     winner := game.Winner
     loser := game.Loser
@@ -51,6 +55,10 @@ func updateGame(game *Game, rankingFunc RankingFunction) {
 }
 
 
+//checks to see if we have a mapping for this player in the players map
+//if so, we return the *RankedPlayer it maps to
+//if not, we create a new ranked player, associate the Player with * to new RankedPlayer
+//and add *RankedPlayer to end of leaderboard
 func addPlayer(p Player, ps map[Player]*RankedPlayer, leaders *rankedPlayerSlice) *RankedPlayer{
     if (ps[p] != nil) {
         fmt.Println("player: ", p, " already exists")
@@ -68,12 +76,12 @@ func addPlayer(p Player, ps map[Player]*RankedPlayer, leaders *rankedPlayerSlice
 //will ultimately output to a chan, just dont know what type yet
 //will also take as arg a function, the ranking function.  Should conform to 
 //some set interface so multiple ranking functions can be used
-func ReadGames (gamesChan chan Game, rankingFunc RankingFunction) {
+func RankGames (gamesChan chan Game, rankingFunc RankingFunction, leaderboardChan chan []*RankedPlayer) {
     readGameFile(rankingFunc)
-    //for game := range gamesChan {
+    for game := range gamesChan {
        //log game to master record
-       //updateGame(&game, rankingFunc)
-       //sort
-       //publish leaderboard
-    //}
+       updateGame(&game, rankingFunc)
+       sort.Sort(leaderboard)
+       leaderboardChan <- leaderboard
+    }
 }
