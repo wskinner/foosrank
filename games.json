@@ -2,23 +2,27 @@
     "Winner": {
         "FirstName": "Will",
         "LastName": "Skinner",
-        "Score": 8
+        "PlayerId": "WillSkinner"
     },
     "Loser": {
         "FirstName": "Michael",
         "LastName": "Schiff",
-        "Score": 6
-    }
+        "PlayerId": "MichaelSchiff"
+    },
+    "WinnerScore": 8,
+    "LoserScore": 6
 },
 {
     "Winner": {
         "FirstName": "Michael",
         "LastName": "Schiff",
-        "Score": 8
+        "PlayerId": "MichaelSchiff"
     },
     "Loser": {
         "FirstName": "Will",
         "LastName": "Skinner",
-        "Score": 6
-    }
+        "PlayerId": "WillSkinner"
+    },
+    "WinnerScore": 8,
+    "LoserScore":6
 }]
