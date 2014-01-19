@@ -73,6 +73,15 @@ func addPlayer(p Player, ps map[string]*RankedPlayer, leaders *rankedPlayerSlice
     }
 }
 
+func getLogFile() *os.File {
+    file, err := os.OpenFile("games.json", os.O_RDWR | os.O_APPEND, 0666)
+    if err == nil {
+        return file
+    } else {
+        return nil
+    }
+}
+
 //will ultimately output to a chan, just dont know what type yet
 //will also take as arg a function, the ranking function.  Should conform to 
 //some set interface so multiple ranking functions can be used
