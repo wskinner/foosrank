@@ -89,7 +89,9 @@ func logGame(game Game, file *os.File) {
     fi, _ := file.Stat()
     bytes, err := json.Marshal(game)
     if err == nil {
-        file.WriteAt([]byte(",\n"), fi.Size()-2)
+        sep := "\n"
+        if (fi.Size() > 3) { sep = ","+sep }
+        file.WriteAt([]byte(sep), fi.Size()-2)
         file.Write(bytes)
         file.Write([]byte("\n]"))
         fmt.Println("logged game")
