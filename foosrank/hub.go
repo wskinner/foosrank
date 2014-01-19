@@ -2,6 +2,7 @@ package foosrank
 
 import (
 	"encoding/json"
+	"fmt"
 )
 
 type hub struct {
@@ -32,14 +33,17 @@ func (h *hub) run() {
 	for {
 		select {
 		case c := <-h.register:
+			fmt.Println("New client connected.")
 			h.connections[c] = true
 			msg, _ := json.Marshal(h.currentLeaderboard)
 			c.send <- msg
 		case c := <-h.unregister:
+			fmt.Println("Client disconnected.")
 			delete(h.connections, c)
 		case m := <-h.broadcast:
 			// For each connection, send it the message. If the channel is not 
 			// full, close the connection.
+			fmt.Println("Broadcasting message to all clients: " + string(m))
 			for c := range h.connections {
 				select {
 				case c.send <- m:
