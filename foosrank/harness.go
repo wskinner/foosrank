@@ -37,7 +37,6 @@ func readGameFile(rankingFunc RankingFunction) {
         updateGame(&game, rankingFunc)
     }
     fmt.Println(leaderboard)
-    sort.Sort(leaderboard)
 }
 
 //gets the pointer to RankedPlayer from players map (via addPlayer)
@@ -76,12 +75,22 @@ func addPlayer(p Player, ps map[Player]*RankedPlayer, leaders *rankedPlayerSlice
 //will ultimately output to a chan, just dont know what type yet
 //will also take as arg a function, the ranking function.  Should conform to 
 //some set interface so multiple ranking functions can be used
-func RankGames (gamesChan chan Game, rankingFunc RankingFunction, leaderboardChan chan []*RankedPlayer) {
+func RankGames (gamesChan chan Game, rankingFunc RankingFunction, leaderboardChan chan []RankedPlayer) {
     readGameFile(rankingFunc)
+    sort.Sort(leaderboard)
+    leaderboardChan <- convertToValues(leaderboard)
     for game := range gamesChan {
        //log game to master record
        updateGame(&game, rankingFunc)
        sort.Sort(leaderboard)
-       leaderboardChan <- leaderboard
+       leaderboardChan <- convertToValues(leaderboard)
     }
+}
+
+func convertToValues(x rankedPlayerSlice) []RankedPlayer {
+    res := make([]RankedPlayer, len(x))
+    for i := 0; i < len(x); i++ {
+       res[i] = *(x[i])
+    }
+    return res
 }
