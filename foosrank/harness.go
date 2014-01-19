@@ -18,7 +18,7 @@ func (x rankedPlayerSlice) Swap(i, j int) {
 }
 
 //a map of Player (soon a unique id field in a player) to *RankedPlayer in leaderboard
-var players = make(map[Player]*RankedPlayer)
+var players = make(map[string]*RankedPlayer)
 
 //a sorted slice of RankedPlayers
 var leaderboard = make(rankedPlayerSlice, 0)
@@ -58,17 +58,18 @@ func updateGame(game *Game, rankingFunc RankingFunction) {
 //if so, we return the *RankedPlayer it maps to
 //if not, we create a new ranked player, associate the Player with * to new RankedPlayer
 //and add *RankedPlayer to end of leaderboard
-func addPlayer(p Player, ps map[Player]*RankedPlayer, leaders *rankedPlayerSlice) *RankedPlayer{
-    if (ps[p] != nil) {
+func addPlayer(p Player, ps map[string]*RankedPlayer, leaders *rankedPlayerSlice) *RankedPlayer{
+    var id = p.PlayerId
+    if (ps[id] != nil) {
         fmt.Println("player: ", p, " already exists")
-        return ps[p]
+        return ps[id]
     } else {
         var rank = EloRank{1500} //1 is default rank I guess
         var rankedPlayer = RankedPlayer{p, rank} //construct ranked player
-        ps[p] = &rankedPlayer
+        ps[id] = &rankedPlayer
         *leaders = append(*leaders, &rankedPlayer)
         fmt.Println("added player: ", p)
-        return ps[p]
+        return ps[id]
     }
 }
 
