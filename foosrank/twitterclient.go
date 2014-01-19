@@ -8,6 +8,8 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"os"
+	"sort"
+	"strconv"
 )
 
 type TwitterCreds struct {
@@ -35,12 +37,38 @@ func GetApi() *anaconda.TwitterApi {
 
 func pollTwitter(api *anaconda.TwitterApi) []anaconda.Tweet {
 	fmt.Println("polling twitter")
-	v := url.Values{}
+	v := url.Values{"since_id": {getLastId()}}
+	//v := url.Values{}
 
 	// should be more than enough
 	// v.Set("count", "")
 	mentions, _ := api.GetStatusesMentionsTimeline(v)
+	sort.Sort(anaconda.ById(mentions))
+	if len(mentions) == 1 {
+		saveLastId(strconv.FormatInt(mentions[0].Id, 10))
+	} else if len(mentions) > 1 {
+		saveLastId(strconv.FormatInt(mentions[len(mentions)-1].Id, 10))
+	}
+
 	return mentions
+}
+
+func saveLastId(id string) {
+	bytes := []byte(id)
+	err := ioutil.WriteFile("lastid.txt", bytes, 0644)
+	if err != nil {
+		fmt.Println(err)
+	}
+}
+
+// If no last id, just get everything
+func getLastId() string {
+	dat, err := ioutil.ReadFile("lastid.txt")
+	if err != nil {
+		saveLastId("0")
+		return "0"
+	}
+	return string(dat)
 }
 
 func PollAtInterval(api *anaconda.TwitterApi, sleepTime time.Duration, tweetQueue chan anaconda.Tweet) {
@@ -49,7 +77,7 @@ func PollAtInterval(api *anaconda.TwitterApi, sleepTime time.Duration, tweetQueu
 		mentions := pollTwitter(api)
 		fmt.Println("got ", len(mentions), " mentions")
 		for _,t := range mentions {
-			fmt.Println(t.Text)
+			fmt.Printf("Text: %s. Id: %d\n", t.Text, t.Id)
 			tweetQueue <- t
 		}
 		fmt.Println("sleeping")
