@@ -63,7 +63,7 @@ func addPlayer(p Player, ps map[Player]*RankedPlayer, leaders *rankedPlayerSlice
         fmt.Println("player: ", p, " already exists")
         return ps[p]
     } else {
-        var rank = EloRank{1} //1 is default rank I guess
+        var rank = EloRank{1500} //1 is default rank I guess
         var rankedPlayer = RankedPlayer{p, rank} //construct ranked player
         ps[p] = &rankedPlayer
         *leaders = append(*leaders, &rankedPlayer)
