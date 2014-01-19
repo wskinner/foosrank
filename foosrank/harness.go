@@ -59,7 +59,7 @@ func updateGame(game *Game, rankingFunc RankingFunction) {
 //if not, we create a new ranked player, associate the Player with * to new RankedPlayer
 //and add *RankedPlayer to end of leaderboard
 func addPlayer(p Player, ps map[Player]*RankedPlayer, leaders *rankedPlayerSlice) *RankedPlayer{
-    id = p.PlayerId
+    var id = p.PlayerId
     if (ps[id] != nil) {
         fmt.Println("player: ", p, " already exists")
         return ps[id]
