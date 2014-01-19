@@ -37,6 +37,8 @@ func (trueSkill TrueSkillRank) Rank() int {
     return trueSkill.Mean
 }
 
+type RankingFunction func(int, int) (int, int)
+
 // This should be serialized and sent to the client
 type Leaderboard struct {
 	Players []RankedPlayer

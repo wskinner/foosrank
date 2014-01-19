@@ -28,25 +28,26 @@ func readGameFile() {
 	    winner := game.Winner
 	    loser := game.Loser
         fmt.Println(winner, loser)
-        
-        if (players[winner]) {
-            fmt.Println("skipping", winner)
-        } else {
-            players[winner] = true
-            fmt.Println("adding", winner)
-        }
-        
-        if (players[loser]) {
-            fmt.Println("skipping", loser)
-        } else {
-            fmt.Println("adding", loser)
-            players[loser] = true
-        }
+        addPlayer(winner, players)
+        addPlayer(loser, players)
+    }
+}
+
+func addPlayer(p Player, ps map[Player]bool) bool {
+    if (ps[p]) {
+        fmt.Println("player: ", p, " already exists")
+        return false
+    } else {
+        ps[p] = true
+        fmt.Println("added player: ", p)
+        return true
     }
 }
 
 //will ultimately output to a chan, just dont know what type yet
-func ReadGames (gamesChan chan Game) {
+//will also take as arg a function, the ranking function.  Should conform to 
+//some set interface so multiple ranking functions can be used
+func ReadGames (gamesChan chan Game, rankingFunc RankingFunction) {
     readGameFile()
     //for game := range gamesChan {
        //log game to master record

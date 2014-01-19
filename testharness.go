@@ -5,6 +5,6 @@ import (
 )
 
 func main() {
-    foosrank.ReadGames(make(chan foosrank.Game))
+    foosrank.ReadGames(make(chan foosrank.Game), foosrank.RankElo)
 }
 
