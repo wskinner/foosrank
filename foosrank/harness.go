@@ -17,11 +17,13 @@ func (x rankedPlayerSlice) Swap(i, j int) {
     x[j] = temp
 }
 
-//a map of Player (soon a unique id field in a player) to *RankedPlayer in leaderboard
-var players = make(map[string]*RankedPlayer)
+var (
+    //a map of Player (soon a unique id field in a player) to *RankedPlayer in leaderboard
+    players = make(map[string]*RankedPlayer)
 
-//a sorted slice of RankedPlayers
-var leaderboard = make(rankedPlayerSlice, 0)
+    //a sorted slice of RankedPlayers
+    leaderboard = make(rankedPlayerSlice, 0)
+)
 
 //loads games out of file, updates the leaderboard for each game, 
 //then resorts leaderboard after all updates
@@ -78,7 +80,21 @@ func getLogFile() *os.File {
     if err == nil {
         return file
     } else {
+        fmt.Println("error: couldn't open log")
         return nil
+    }
+}
+
+func logGame(game Game, file *os.File) {
+    fi, _ := file.Stat()
+    bytes, err := json.Marshal(game)
+    if err == nil {
+        file.WriteAt([]byte(",\n"), fi.Size()-2)
+        file.Write(bytes)
+        file.Write([]byte("\n]"))
+        fmt.Println("logged game")
+    } else {
+        fmt.Println("failed to log game")
     }
 }
 
@@ -89,8 +105,11 @@ func RankGames (gamesChan chan Game, rankingFunc RankingFunction, leaderboardCha
     readGameFile(rankingFunc)
     sort.Sort(leaderboard)
     leaderboardChan <- convertToValues(leaderboard)
+
+    gameLog := getLogFile()
+
     for game := range gamesChan {
-       //log game to master record
+       logGame(game, gameLog)
        updateGame(&game, rankingFunc)
        sort.Sort(leaderboard)
        leaderboardChan <- convertToValues(leaderboard)

@@ -1,28 +1,8 @@
-[{ 
-    "Winner": {
-        "FirstName": "Will",
-        "LastName": "Skinner",
-        "PlayerId": "WillSkinner"
-    },
-    "Loser": {
-        "FirstName": "Michael",
-        "LastName": "Schiff",
-        "PlayerId": "MichaelSchiff"
-    },
-    "WinnerScore": 8,
-    "LoserScore": 6
-},
-{
-    "Winner": {
-        "FirstName": "Michael",
-        "LastName": "Schiff",
-        "PlayerId": "MichaelSchiff"
-    },
-    "Loser": {
-        "FirstName": "Will",
-        "LastName": "Skinner",
-        "PlayerId": "WillSkinner"
-    },
-    "WinnerScore": 8,
-    "LoserScore":6
-}]
+[
+{"Winner":{"FirstName":"Michael","LastName":"Schiff","PlayerId":"michaelschiff"},"Loser":{"FirstName":"Will","LastName":"Skinner","PlayerId":"willskinner"},"WinnerScore":8,"LoserScore":6}
+,
+{"Winner":{"FirstName":"Michael","LastName":"Schiff","PlayerId":"michaelschiff"},"Loser":{"FirstName":"Will","LastName":"Skinner","PlayerId":"willskinner"},"WinnerScore":9,"LoserScore":7},
+{"Winner":{"FirstName":"Will","LastName":"Skinner","PlayerId":"willskinner"},"Loser":{"FirstName":"Michael","LastName":"Schiff","PlayerId":"michaelschiff"},"WinnerScore":8,"LoserScore":6},
+{"Winner":{"FirstName":"Tomo","LastName":"","PlayerId":"tomo"},"Loser":{"FirstName":"Harrison","LastName":"","PlayerId":"harrison"},"WinnerScore":8,"LoserScore":5},
+{"Winner":{"FirstName":"Harrison","LastName":"","PlayerId":"harrison"},"Loser":{"FirstName":"Javier","LastName":"","PlayerId":"javier"},"WinnerScore":8,"LoserScore":5}
+]
