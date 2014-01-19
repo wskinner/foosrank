@@ -14,8 +14,14 @@ type Game struct {
 
 type RankedPlayer struct {
     Player Player
-    PlayerRank Rank
-    PlayerId int64 // who knows, maybe we will have billions of players
+    PlayerRank EloRank
+    //without just first/last name coming from the parser, its impossible to uniquely id a player
+    //either there is no one with that name, so give them the next available id
+    //or: someone already has that name, and we cant tell if this is a new person with
+    //the same name, or someone we've already seen.  Names should be a unique player id instead
+    //(supplied directly in the tweet).  Players should have to register this name with the site
+    //before using it.
+    //PlayerId int64 // who knows, maybe we will have billions of players
 }
 
 type Rank interface {

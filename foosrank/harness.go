@@ -6,17 +6,18 @@ import (
     "io/ioutil"
     "encoding/json"
     "container/list"
+    //"sort"
 )
 
 
 
 //an ordered list of RankedPlayers
-var leaderBoard = list.New()
+var leaderboard = list.New()
 
 //a map of Person to RankedPlayer list Element
-var players = make(map[Player]bool)
+var players = make(map[Player]*list.Element)
 
-func readGameFile() {
+func readGameFile(rankingFunc RankingFunction) {
     file, err := ioutil.ReadFile("games.json")
     if err != nil {
         fmt.Printf("File error: %v\n", err)
@@ -27,20 +28,27 @@ func readGameFile() {
     for _, game := range games {
 	    winner := game.Winner
 	    loser := game.Loser
-        fmt.Println(winner, loser)
-        addPlayer(winner, players)
-        addPlayer(loser, players)
+        rankedWinner := addPlayer(winner, players, leaderboard).Value.(RankedPlayer)
+        rankedLoser := addPlayer(loser, players, leaderboard).Value.(RankedPlayer)
+        fmt.Println(rankedWinner, rankedLoser)
+        winnerNewRank, loserNewRank := rankingFunc(rankedWinner.PlayerRank.Value, rankedLoser.PlayerRank.Value)
+        fmt.Println(winnerNewRank, loserNewRank)
     }
+    //sort.Sort(leaderboard) //need to implement Sort interface for my list
 }
 
-func addPlayer(p Player, ps map[Player]bool) bool {
-    if (ps[p]) {
+//TODO: implement updateGame function, does the stuff above since is reusable
+
+func addPlayer(p Player, ps map[Player]*list.Element, leaders *list.List) *list.Element{
+    if (ps[p] != nil) {
         fmt.Println("player: ", p, " already exists")
-        return false
+        return ps[p]
     } else {
-        ps[p] = true
+        var rank = EloRank{1} //1 is default rank I guess
+        var rankedPlayer = RankedPlayer{p, rank} //construct ranked player
+        ps[p] = leaders.PushBack(rankedPlayer) //map player to ranked player
         fmt.Println("added player: ", p)
-        return true
+        return ps[p]
     }
 }
 
@@ -48,7 +56,7 @@ func addPlayer(p Player, ps map[Player]bool) bool {
 //will also take as arg a function, the ranking function.  Should conform to 
 //some set interface so multiple ranking functions can be used
 func ReadGames (gamesChan chan Game, rankingFunc RankingFunction) {
-    readGameFile()
+    readGameFile(rankingFunc)
     //for game := range gamesChan {
        //log game to master record
        //add ranks to game players

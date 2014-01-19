@@ -20,11 +20,11 @@ func Run() {
 	go func() {
 		p1 := Player{"Will", "Skinner"}
 		r1 := EloRank{1500}
-		rp1 := RankedPlayer{p1, r1, 1234}
+		rp1 := RankedPlayer{p1, r1}//, 1234}
 
 		p2 := Player{"Michael", "Schiff"}
 		r2 := EloRank{1500}
-		rp2 := RankedPlayer{p2, r2, 5678}
+		rp2 := RankedPlayer{p2, r2}//, 5678}
 
 		leaderboard := Leaderboard{[]RankedPlayer{rp1, rp2}}
 		msg, _ := json.Marshal(leaderboard)
