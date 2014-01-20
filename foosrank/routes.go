@@ -20,7 +20,7 @@ func defaultAssetPath() string {
 }
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
-	homeTempl := template.Must(template.ParseFiles(filepath.Join(defaultAssetPath(), "angular_home.html")))
+	homeTempl := template.Must(template.ParseFiles(filepath.Join(defaultAssetPath(), "home.html")))
 	homeTempl.Execute(w, r.Host)
 }
 
