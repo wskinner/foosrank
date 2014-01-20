@@ -9,6 +9,14 @@ import (
 	"strings"
 )
 
+// Capitalize names
+func capitalize(str string) string {
+	if len(str) == 0 {
+		return str
+	}
+	return strings.ToUpper(string(str[0])) + strings.ToLower(str[1:])
+}
+
 // Matches and captures the form:
 // fname [lname] score fname [lname] score
 func GetTweetEntities(tweetstr string) ([]string, error) {
@@ -18,7 +26,7 @@ func GetTweetEntities(tweetstr string) ([]string, error) {
 		fmt.Printf("Error compile regular expression: %v\n", err)
 		return nil, err
 	}
-    matched := matcher.FindStringSubmatch(tweetstr)
+	matched := matcher.FindStringSubmatch(tweetstr)
 	// Should have at least 2 first names and 2 scores
 	// 5 because the first index is occupied by entire string
 	if len(matched) < 5 {
@@ -31,7 +39,7 @@ func GetTweetEntities(tweetstr string) ([]string, error) {
 }
 
 func updateString(p *Player, val string) error {
-	val = strings.TrimSpace(val)
+	val = capitalize(strings.TrimSpace(val))
 	var err error = nil
 	if (*p).FirstName == "" {
 		(*p).FirstName = val
@@ -96,6 +104,7 @@ func parseTweet(tweet anaconda.Tweet) (Game, error) {
 	}
 
 	game.Winner, game.Loser, game.WinnerScore, game.LoserScore, err = GetPlayers(groups)
+	game.GameId = tweet.Id
 
 	fmt.Printf("parsed a game:\n%+v\n", game)
 	

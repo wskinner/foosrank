@@ -10,6 +10,7 @@ import (
 	"os"
 	"sort"
 	"strconv"
+	"math"
 )
 
 type TwitterCreds struct {
@@ -36,7 +37,7 @@ func GetApi() *anaconda.TwitterApi {
 }
 
 func pollTwitter(api *anaconda.TwitterApi) []anaconda.Tweet {
-	fmt.Println("polling twitter")
+	fmt.Println("polling twitter - lastid=", getLastId())
 	v := url.Values{"since_id": {getLastId()}}
 	//v := url.Values{}
 
@@ -65,8 +66,9 @@ func saveLastId(id string) {
 func getLastId() string {
 	dat, err := ioutil.ReadFile("lastid.txt")
 	if err != nil {
-		saveLastId("0")
-		return "0"
+		max := strconv.FormatUint(math.MaxUint64, 10)
+		saveLastId(max)
+		return max
 	}
 	return string(dat)
 }

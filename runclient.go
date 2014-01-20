@@ -22,8 +22,8 @@ func main() {
         os.Exit(1)
     }
     if (os.Args[1] == "twitter") {
-        //10 second intervals
-        dur, err := time.ParseDuration("10000ms")
+        // 65 second intervals
+        dur, err := time.ParseDuration("65s")
         if err != nil {
             fmt.Printf("Error: %v\n")
         }
