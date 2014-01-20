@@ -1,0 +1,49 @@
+<html ng-app>
+<head>
+<title>Foosball Leaderboard</title>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.8/angular.min.js"></script>
+<script type="text/javascript">
+    var leaderboardController = function($scope) {
+        console.log("controller loaded")
+        if (window["WebSocket"]) {
+            conn = new WebSocket("ws://{{$}}/ws");
+            conn.onclose = function(evt) {
+                console.log("connection closed")
+            }
+			conn.onmessage = function(evt) {
+				console.log("got data: " + evt.data)
+                $scope.rankedPlayers = JSON.parse(evt.data)
+                $scope.$apply()
+                console.log($scope.rankedPlayers)
+            }
+        } else {
+            window.alert("Your browser does not support WebSockets.")
+        }
+    }
+</script>
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+<style type="text/css">
+		body { background-color: yellow; }
+		#leaderboardLabel { text-align: center; color: blue; font-size: 40px; }
+		#leaderboard { text-align: center; color: navy; font-size: 20px; }
+		ul { list-style-type: decimal; }
+
+</style>
+
+</head>
+<body>
+	<div id="leaderboardLabel">
+		Leaderboard
+	</div>
+	<div align=center id="leaderboardContainer" ng-controller="leaderboardController">
+        <p ng-bind="rankedPlayers[0].Player.FirstName"></p>
+        <table>
+            <tr ng-repeat="rankedPlayer in rankedPlayers">
+                <td ng-bind="rankedPlayer.Player.FirstName rankedPlayer.Player.LastName"/>
+                <td ng-bind="rankedPlayer.PlayerRank.Value"/>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
