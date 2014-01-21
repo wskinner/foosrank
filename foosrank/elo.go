@@ -8,7 +8,7 @@ import (
 // Return (winnerNewRank, loserNewRank)
 func RankElo(winnerRank float64, loserRank float64) (float64, float64) {
 	rankDiff := float64(winnerRank - loserRank)
-	exp := float64(-1 * rankDiff / 400)
+	exp := float64(-1.0 * rankDiff / 400.0)
 	odds := 1.0 / (1.0 + math.Pow(10, exp))
 	fmt.Println("Odds of winning: ", odds)
 	var k float64
