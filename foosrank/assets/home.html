@@ -51,7 +51,11 @@
         <div id="leaderboardLabel">Leaderboard</div>
         <div align=center id="leaderboardContainer" ng-controller="leaderboardController">
             <table class="table table-striped table-hover">
-                <tbody>
+							<tbody>
+									<tr>
+										<th style="text-align:center">Player</th>
+										<th>Rank</th>
+									</tr>
                     <tr ng-repeat="rankedPlayer in rankedPlayers" ng-click="getPlayerDetail(rankedPlayer)">
                         <td ng-bind="getName(rankedPlayer)" style="text-align:center"></td>
                         <td ng-bind="rankedPlayer.PlayerRank.Value"/>
