@@ -1,13 +1,17 @@
 package foosrank
 
-import "math"
+import (
+	"math"
+	"fmt"
+)
 
 // Return (winnerNewRank, loserNewRank)
-func RankElo(winnerRank int, loserRank int) (int, int) {
-	rankDiff := winnerRank - loserRank
+func RankElo(winnerRank float64, loserRank float64) (float64, float64) {
+	rankDiff := float64(winnerRank - loserRank)
 	exp := float64(-1 * rankDiff / 400)
-	odds := 1/ (1 + math.Pow(10, exp))
-	var k int
+	odds := 1.0 / (1.0 + math.Pow(10, exp))
+	fmt.Println("Odds of winning: ", odds)
+	var k float64
 	if winnerRank < 2100 {
 		k = 32
 	} else if winnerRank >= 2100 && winnerRank < 2400 {
@@ -16,7 +20,7 @@ func RankElo(winnerRank int, loserRank int) (int, int) {
 		k = 16
 	}
 	
-	winnerNewRank := int(float64(winnerRank) + float64(k) * (1 - odds))
+	winnerNewRank := winnerRank + k * (1.0 - odds)
 	loserNewRank := loserRank - (winnerNewRank - winnerRank)
 	return winnerNewRank, loserNewRank
 }

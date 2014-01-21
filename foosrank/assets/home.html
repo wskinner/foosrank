@@ -18,8 +18,12 @@
                         console.log("connection closed")
                     }
                     conn.onmessage = function(evt) {
-                        console.log("got data: " + evt.data)
-                        $scope.rankedPlayers = JSON.parse(evt.data)
+											console.log("got data: " + evt.data)
+												var rankedPlayers = JSON.parse(evt.data);
+													for (var i = 0; i < rankedPlayers.length; i++) {
+														rankedPlayers[i].PlayerRank.Value = Math.round(rankedPlayers[i].PlayerRank.Value);
+													}
+													$scope.rankedPlayers = rankedPlayers;
                         $scope.$apply()
                         console.log($scope.rankedPlayers)
                     }

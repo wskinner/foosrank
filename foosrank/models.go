@@ -21,7 +21,7 @@ type RankedPlayer struct {
 
 
 type EloRank struct {
-	Value int
+	Value float64
 }
 
-type RankingFunction func(int, int) (int, int)
+type RankingFunction func(float64, float64) (float64, float64)
