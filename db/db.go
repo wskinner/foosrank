@@ -11,6 +11,22 @@ func GetDatabaseConnection() *sqlite.Conn {
     return c
 }
 
+//apply a function to all games
+func MapGames() {
+
+}
+
+func AddGame(game foosrank.Game, connection *sqlite.Conn) {
+    winnerId := GetPlayerDbId(game.Winner, connection)
+    loserId := GetPlayerDbId(game.Loser, connection)
+    sql := fmt.Sprintf("INSERT INTO Games(id, winnerId, loserId, WinnerScore, LoserScore, GameId) VALUES(NULL, %v, %v, %v, %v, %v);", winnerId, loserId, game.WinnerScore, game.LoserScore, game.GameId)
+    err := connection.Exec(sql)
+    if (err != nil) {
+        fmt.Printf("Error adding %v: [%v]\n", game, err)
+    }
+}
+
+
 func GetPlayerDbId(player foosrank.Player, connection *sqlite.Conn) int {
    id := getExistingPlayerDbId(player, connection)
    if (id > 0) {
