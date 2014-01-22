@@ -11,12 +11,47 @@ func GetDatabaseConnection() *sqlite.Conn {
     return c
 }
 
-//apply a function to all games
-func MapGames() {
-
+func MapGames(mapper func(foosrank.Game), connection *sqlite.Conn) {
+    var game foosrank.Game
+    var wId int
+    var lId int
+    query, err := connection.Prepare("SELECT winnerId, loserId, WinnerScore, LoserScore, GameId FROM Games;")
+    err = query.Exec()
+    if (err == nil) {
+        for ; query.Next() ; {
+            err := query.Scan(&wId, &lId, &game.WinnerScore, &game.LoserScore, &game.GameId)
+            if err != nil { fmt.Println("unable to scan game") }
+            game.Winner = GetPlayerForId(wId, connection)
+            game.Loser = GetPlayerForId(lId, connection)
+            mapper(game)
+        }
+    } else {
+        fmt.Println("Unable to execute select games query")
+    }
 }
 
+func GetPlayerForId(id int, connection *sqlite.Conn) foosrank.Player {
+    var res foosrank.Player
+    sql := fmt.Sprintf("SELECT Players.FirstName, Players.LastName, Players.PlayerId FROM Players WHERE Players.id = %v", id)
+    query, err := connection.Prepare(sql)
+    err = query.Exec()
+    if (err == nil && query.Next()) {
+        err = query.Scan(&res.FirstName, &res.LastName, &res.PlayerId)
+        if (err == nil) {
+            return res
+        } else {
+            fmt.Printf("error scanning player for id %v : %v\n", id, err)
+            return res
+        }
+    } else {
+        fmt.Printf("error executing query for player %v : %v\n", id, err)
+        return res
+    }
+}
+
+
 func AddGame(game foosrank.Game, connection *sqlite.Conn) {
+    fmt.Printf("Adding Game: %v\n", game)
     winnerId := GetPlayerDbId(game.Winner, connection)
     loserId := GetPlayerDbId(game.Loser, connection)
     sql := fmt.Sprintf("INSERT INTO Games(id, winnerId, loserId, WinnerScore, LoserScore, GameId) VALUES(NULL, %v, %v, %v, %v, %v);", winnerId, loserId, game.WinnerScore, game.LoserScore, game.GameId)
