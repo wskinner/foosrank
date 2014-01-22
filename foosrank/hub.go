@@ -3,6 +3,7 @@ package foosrank
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 )
 
 type hub struct {
@@ -29,6 +30,15 @@ var h = hub {
 	connections: make(map[*connection]bool),
 }
 
+type Ping struct {
+	Ping string
+}
+
+func ping() ([]byte, error) {
+	pingMsg := Ping{Ping: "true"}
+	return json.Marshal(pingMsg)
+}
+
 func (h *hub) run() {
 	for {
 		select {
@@ -37,6 +47,16 @@ func (h *hub) run() {
 			h.connections[c] = true
 			msg, _ := json.Marshal(h.currentLeaderboard)
 			c.send <- msg
+			// setup ping 
+			go func () {
+				for {
+					pMsg, _ := ping()
+					c.send <- pMsg
+					t, _ := time.ParseDuration("280s")
+					fmt.Println("Sent ping to client")
+					time.Sleep(t)
+				}
+			}()
 		case c := <-h.unregister:
 			fmt.Println("Client disconnected.")
 			delete(h.connections, c)

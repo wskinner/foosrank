@@ -33,9 +33,10 @@ func readGameFile(rankingFunc RankingFunction) {
         fmt.Printf("File error: %v\n", err)
         os.Exit(1)
     }
-    var games []Game = make([]Game, 10)
+    var games []Game = make([]Game, 20)
     json.Unmarshal(file, &games)
     for _, game := range games {
+    	fmt.Println("Game: ", game)
         updateGame(&game, rankingFunc)
     }
     fmt.Println(leaderboard)
@@ -91,7 +92,12 @@ func logGame(game Game, file *os.File) {
     if err == nil {
         sep := "\n"
         if (fi.Size() > 3) { sep = ","+sep }
-        file.WriteAt([]byte(sep), fi.Size()-2)
+        n, e := file.WriteAt([]byte(sep), fi.Size()-2)
+        if e != nil {
+        	fmt.Println("Error: ", e)
+        } else {
+        	fmt.Printf("Wrote %d bytes\n", n)
+        }
         file.Write(bytes)
         file.Write([]byte("\n]"))
         fmt.Println("logged game")

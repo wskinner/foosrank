@@ -21,6 +21,7 @@ func defaultAssetPath() string {
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 	homeTempl := template.Must(template.ParseFiles(filepath.Join(defaultAssetPath(), "home.html")))
+	fmt.Println("Host: " + r.Host)
 	homeTempl.Execute(w, r.Host)
 }
 

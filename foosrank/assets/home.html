@@ -20,6 +20,12 @@
                     conn.onmessage = function(evt) {
 											console.log("got data: " + evt.data)
 												var rankedPlayers = JSON.parse(evt.data);
+											if (rankedPlayers.Ping != null) {
+												msg = JSON.stringify({"Pong": "true"});
+												console.log("sending msg: " + msg)
+													conn.send(msg);
+													return;
+												} 
 													for (var i = 0; i < rankedPlayers.length; i++) {
 														rankedPlayers[i].PlayerRank.Value = Math.round(rankedPlayers[i].PlayerRank.Value);
 													}
@@ -37,9 +43,9 @@
             #leaderboardLabel { text-align: center; color: blue; font-size: 40px; }
 			#leaderboard { text-align: center; color: navy; font-size: 20px; }
             Footer {
-				text-align: center;
+							text-align: center;
+							position: absolute;
                 display:block;
-                position: absolute;
                 bottom: 0;
                 width: 100%;
                 height: 141px;
@@ -49,16 +55,16 @@
     </head>
     <body>
         <div id="leaderboardLabel">Leaderboard</div>
-        <div align=center id="leaderboardContainer" ng-controller="leaderboardController">
-            <table class="table table-striped table-hover">
-							<tbody>
-									<tr>
+				<div id="leaderboardContainer" ng-controller="leaderboardController">
+					<table style-"text-align:center" class="table table-striped table-hover">
+						<thead>
 										<th style="text-align:center">Player</th>
-										<th>Rank</th>
-									</tr>
+										<th style="text-align:center">Rank</th>
+								</thead>
+							<tbody>
                     <tr ng-repeat="rankedPlayer in rankedPlayers" ng-click="getPlayerDetail(rankedPlayer)">
                         <td ng-bind="getName(rankedPlayer)" style="text-align:center"></td>
-                        <td ng-bind="rankedPlayer.PlayerRank.Value"/>
+                        <td ng-bind="rankedPlayer.PlayerRank.Value" style="text-align:center"/>
                     </tr>
                 </tbody>
             </table>

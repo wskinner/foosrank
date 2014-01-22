@@ -2,6 +2,8 @@ package foosrank
 
 import (
 	"github.com/gorilla/websocket"
+	"fmt"
+	"encoding/json"
 )
 
 type connection struct {
@@ -12,15 +14,20 @@ type connection struct {
 	send chan []byte
 }
 
-// For now this is a nop
+type Pong struct {
+	Pong string
+}
+
+// Handle pongs
 func (c *connection) reader() {
 	for {
 		_, message, err := c.ws.ReadMessage()
 		if err != nil {
 			break
 		}
-
-		var _ = message
+		var msg Pong
+		_ = json.Unmarshal(message, &msg)
+		fmt.Println("Received message:", msg)
 
 		//h.broadcast <- message
 	}
