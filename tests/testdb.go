@@ -9,6 +9,5 @@ import (
 func main() {
     connection := db.GetDatabaseConnection()
     player := foosrank.Player{"Michael", "Schiff", "michaelschiff"}
-    db.AddPlayer(player, connection)
-    fmt.Println(db.GetExistingPlayerDbId(player, connection))
+    fmt.Println(db.GetPlayerDbId(player, connection))
 }
