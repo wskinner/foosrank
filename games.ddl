@@ -1,0 +1,14 @@
+CREATE TABLE IF NOT EXISTS Players (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    FirstName VARCHAR(50),
+    LastName VARCHAR(50),
+    PlayerId VARCHAR(100));
+
+CREATE TABLE IF NOT EXISTS Games (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    WinnerId INTEGER,
+    LoserId INTEGER,
+    WinnerScore INTEGER,
+    LoserScore INTEGER,
+    FOREIGN KEY(WinnerId) REFERENCES Players(id)
+    FOREIGN KEY(LoserId) REFERENCES Players(id));
