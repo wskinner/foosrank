@@ -14,21 +14,15 @@
                     $window.location.href = "/players/"+rankedPlayer.Player.PlayerId
 								}
 								
-								$scope.getRankCol = function (rankedPlayer) {
-									var val = rankedPlayer.PlayerRank.Value 
-										console.log("getRankCol: " + val)
-										return val
-								}
-
-								$scope.getRankDeltaCol = function (rankedPlayer) {
-									var val = Math.round(rankedPlayer.PlayerRankDelta)
-									if (val > 0) {
-										var result = "\u21E1 " + Math.abs(val) 
-									} else {
-										var result = "\u21E3 " + Math.abs(val)
-									}
-									return result
-								}
+                $scope.getRankDeltaCol = function (rankedPlayer) {
+                    var val = Math.round(rankedPlayer.PlayerRankDelta)
+                    if (val > 0) {
+                        var result = "\u21E1 " + Math.abs(val) 
+                    } else {
+                        var result = "\u21E3 " + Math.abs(val)
+                    }
+                    return result
+                }
 
                 if (window["WebSocket"]) {
                     conn = new WebSocket("ws://{{$}}/ws");
@@ -36,18 +30,18 @@
                         console.log("connection closed")
                     }
                     conn.onmessage = function(evt) {
-											console.log("got data: " + evt.data)
-												var rankedPlayers = JSON.parse(evt.data);
-											if (rankedPlayers.Ping != null) {
-												msg = JSON.stringify({"Pong": "true"});
-												console.log("sending msg: " + msg)
-													conn.send(msg);
-													return;
-												} 
-													for (var i = 0; i < rankedPlayers.length; i++) {
-														rankedPlayers[i].PlayerRank.Value = Math.round(rankedPlayers[i].PlayerRank.Value);
-													}
-													$scope.rankedPlayers = rankedPlayers;
+                        console.log("got data: " + evt.data)
+                            var rankedPlayers = JSON.parse(evt.data);
+                        if (rankedPlayers.Ping != null) {
+                            msg = JSON.stringify({"Pong": "true"});
+                            console.log("sending msg: " + msg)
+                            conn.send(msg);
+                            return;
+                        } 
+                        for (var i = 0; i < rankedPlayers.length; i++) {
+                            rankedPlayers[i].PlayerRank.Value = Math.round(rankedPlayers[i].PlayerRank.Value);
+                        }
+                        $scope.rankedPlayers = rankedPlayers;
                         $scope.$apply()
                         console.log($scope.rankedPlayers)
                     }
@@ -94,7 +88,7 @@
                     <tr ng-repeat="rankedPlayer in rankedPlayers" ng-click="getPlayerDetail(rankedPlayer)">
 												<td ng-bind="$index+1"/>
 												<td ng-bind="getName(rankedPlayer)"></td>
-												<td ng-bind="getRankCol(rankedPlayer)"/>
+												<td ng-bind="rankedPlayer.PlayerRank.Value"/>
 													<td ng-class="{red: rankedPlayer.PlayerRankDelta < 0, green: rankedPlayer.PlayerRankDelta > 0}" ng-bind="getRankDeltaCol(rankedPlayer)"/>
                     </tr>
                 </tbody>
