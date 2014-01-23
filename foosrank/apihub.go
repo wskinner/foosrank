@@ -1,0 +1,5 @@
+package foosrank
+
+import (
+	"encoding"
+

@@ -4,7 +4,7 @@ import (
 	"github.com/wskinner/foosrank/foosrank"
 	"time"
 	"fmt"
-	"runtime"
+	//"runtime"
     "os"
 )
 
@@ -38,8 +38,7 @@ func main() {
 
 	go foosrank.RankGames(parsedChan, foosrank.RankElo, leaderboardChan)
 	
-    // infinite loop
-	for {
-		runtime.Gosched()
-	}
+	// Block forever
+	quit := make(chan int)
+	<-quit
 }

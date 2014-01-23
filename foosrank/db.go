@@ -94,3 +94,7 @@ func addPlayerToDb(player Player, connection *sqlite.Conn) {
         fmt.Printf("Error adding %v: [%v]\n", player, err)
     }
 }
+
+func getAllOpponents(uid string) {
+	//sql := fmt.Sprintf("SELECT FirstName, LastName, COUNT(*) 
+}

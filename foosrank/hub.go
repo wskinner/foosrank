@@ -6,11 +6,17 @@ import (
 	"time"
 )
 
+type PlayerPageRegistration struct {
+	Uid string
+	Conn *connection
+}
+
+// Websocket hub for leaderboards only
 type hub struct {
-	// Registered connections
+	// Registered connections (home page only)
 	connections map[*connection]bool
 
-	// Inbound messages from the connections
+	// Broadcast leaderboards on this chan 
 	broadcast chan []byte
 
 	// Register requests from the connections
@@ -21,6 +27,22 @@ type hub struct {
 
 	// The current leaderboard
 	currentLeaderboard []RankedPlayer
+
+	///////////////////////////////////////////////////////////
+	// Unregister requests from player page connections
+	pUnregister chan *connection
+
+	// Registered connections (players page only)
+	// uid -> *connection
+	pConnections map[string]*connection
+
+	pConnectionsSet map[*connection]string
+
+	// Register connections (players page only)
+	pRegister chan PlayerPageRegistration
+
+	// Players who have updated information
+	updatedUids chan string
 }
 
 var h = hub {
@@ -28,6 +50,12 @@ var h = hub {
 	register: make(chan *connection),
 	unregister: make(chan *connection),
 	connections: make(map[*connection]bool),
+	pConnections: make(map[string]*connection),
+	pConnectionsSet: make(map[*connection]string),
+	pRegister: make(chan PlayerPageRegistration),
+	updatedUids: make(chan string),
+
+	
 }
 
 type Ping struct {
@@ -73,6 +101,19 @@ func (h *hub) run() {
 					go c.ws.Close()
 				}
 			}
+		case uid := <-h.updatedUids:
+			if val,ok := h.pConnections[uid]; ok {
+				updatePlayerPage(val, uid)
+			}
+		case s := <-h.pRegister:
+			fmt.Println("New client connected to a player page.")
+			h.pConnections[s.Uid] = s.Conn
+			h.pConnectionsSet[s.Conn] = s.Uid
+			updatePlayerPage(s.Conn, s.Uid)
+		case c := <-h.pUnregister:
+			fmt.Println("Client disconnected from player page")
+			delete(h.pConnections, h.pConnectionsSet[c])
+			delete(h.pConnectionsSet, c)
 		}
 	}
 }
