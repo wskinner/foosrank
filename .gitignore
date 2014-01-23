@@ -25,6 +25,7 @@ credentials.json
 lastid.txt
 games.json
 games.db
+transfer.py
 
 runclient
 log

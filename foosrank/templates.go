@@ -1,5 +1,6 @@
-package foosrank
 
+package foosrank
+/*
 import (
 //	"html/template"
 //	"path/filepath"
