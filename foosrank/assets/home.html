@@ -92,9 +92,9 @@
 							<tbody>
                     <tr ng-repeat="rankedPlayer in rankedPlayers" ng-click="getPlayerDetail(rankedPlayer)">
 												<td ng-bind="$index+1"/>
-												<td ng-bind="getName(rankedPlayer)"></td>
+                                                <td ng-bind="getName(rankedPlayer)">
 												<td ng-bind="rankedPlayer.PlayerRank.Value"/>
-													<td ng-class="{red: rankedPlayer.PlayerRankDelta < 0, green: rankedPlayer.PlayerRankDelta > 0}" ng-bind="getRankDeltaCol(rankedPlayer)"/>
+												<td ng-class="{red: rankedPlayer.PlayerRankDelta < 0, green: rankedPlayer.PlayerRankDelta > 0}" ng-bind="getRankDeltaCol(rankedPlayer)"/>
                     </tr>
                 </tbody>
             </table>
