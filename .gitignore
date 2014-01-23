@@ -24,6 +24,7 @@ _testmain.go
 credentials.json
 lastid.txt
 games.json
+games.db
 
 runclient
 log
