@@ -37,14 +37,18 @@ func readGameFile(rankingFunc RankingFunction) {
     json.Unmarshal(file, &games)
     for _, game := range games {
     	fmt.Println("Game: ", game)
-        updateGame(&game, rankingFunc)
+        updateGame(game, rankingFunc)
     }
     fmt.Println(leaderboard)
 }
 
+//func getRankingMapFunction(rankingFunc RankingFunction) {
+//    return func(game Game) {
+//        updateGame(
+
 //gets the pointer to RankedPlayer from players map (via addPlayer)
 //finds new rank for players, and updates the RankedPlayer structs in the leaderboard
-func updateGame(game *Game, rankingFunc RankingFunction) {
+func updateGame(game Game, rankingFunc RankingFunction) {
     winner := game.Winner
     loser := game.Loser
     rankedWinner := addPlayer(winner, players, &leaderboard)
@@ -125,7 +129,7 @@ func RankGames (gamesChan chan Game, rankingFunc RankingFunction, leaderboardCha
 
     for game := range gamesChan {
        logGame(game, gameLog)
-       updateGame(&game, rankingFunc)
+       updateGame(game, rankingFunc)
        sort.Sort(leaderboard)
        leaderboardChan <- convertToValues(leaderboard)
     }
