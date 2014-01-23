@@ -17,6 +17,7 @@ type Game struct {
 type RankedPlayer struct {
     Player Player
     PlayerRank EloRank
+    PlayerRankDelta float64
 }
 
 

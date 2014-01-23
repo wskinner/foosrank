@@ -50,9 +50,16 @@ func updateGame(game *Game, rankingFunc RankingFunction) {
     rankedWinner := addPlayer(winner, players, &leaderboard)
     rankedLoser := addPlayer(loser, players, &leaderboard)
     fmt.Println("before re-ranking: ", *rankedWinner, *rankedLoser)
-    winnerNewRank, loserNewRank := rankingFunc(rankedWinner.PlayerRank.Value, rankedLoser.PlayerRank.Value)
+
+    winnerOldRank := rankedWinner.PlayerRank.Value
+    loserOldRank := rankedLoser.PlayerRank.Value
+
+    winnerNewRank, loserNewRank := rankingFunc(winnerOldRank, loserOldRank)
     rankedWinner.PlayerRank.Value = winnerNewRank
     rankedLoser.PlayerRank.Value = loserNewRank
+
+    rankedWinner.PlayerRankDelta = winnerNewRank - winnerOldRank
+    rankedLoser.PlayerRankDelta = loserNewRank - loserOldRank
     fmt.Println("after re-ranking: ", *rankedWinner, *rankedLoser)
 }
 
@@ -68,7 +75,7 @@ func addPlayer(p Player, ps map[string]*RankedPlayer, leaders *rankedPlayerSlice
         return ps[id]
     } else {
         var rank = EloRank{1500} //1 is default rank I guess
-        var rankedPlayer = RankedPlayer{p, rank} //construct ranked player
+        var rankedPlayer = RankedPlayer{p, rank, 0.0} //construct ranked player
         ps[id] = &rankedPlayer
         *leaders = append(*leaders, &rankedPlayer)
         fmt.Println("added player: ", p)

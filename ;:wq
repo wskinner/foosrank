@@ -30,8 +30,7 @@ func RunServer(leaderboardChan chan []RankedPlayer) {
 			fmt.Printf("There are %d clients connected\n", len(h.connections))
 			t, _ := time.ParseDuration("30s")
 			time.Sleep(t)
-		}
-	}()
+	}
 	http.HandleFunc("/", homeHandler)
 	http.HandleFunc("/ws", wsHandler)
 	http.HandleFunc("/players/", playersHandler)

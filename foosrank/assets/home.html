@@ -7,11 +7,29 @@
                 console.log("controller loaded")
                 $scope.getName = function (rankedPlayer) {
                     return rankedPlayer.Player.FirstName + " " + rankedPlayer.Player.LastName
-                }
+								}
+
                 $scope.getPlayerDetail = function (rankedPlayer) {
                     console.log("getPlayerDetail: " + rankedPlayer.Player.PlayerId)
                     $window.location.href = "/players/"+rankedPlayer.Player.PlayerId
-                }
+								}
+								
+								$scope.getRankCol = function (rankedPlayer) {
+									var val = rankedPlayer.PlayerRank.Value 
+										console.log("getRankCol: " + val)
+										return val
+								}
+
+								$scope.getRankDeltaCol = function (rankedPlayer) {
+									var val = Math.round(rankedPlayer.PlayerRankDelta)
+									if (val > 0) {
+										var result = val + " \u21E1"
+									} else {
+										var result = val + " \u21E3"
+									}
+									return result
+								}
+
                 if (window["WebSocket"]) {
                     conn = new WebSocket("ws://{{$}}/ws");
                     conn.onclose = function(evt) {
@@ -58,13 +76,17 @@
 				<div id="leaderboardContainer" ng-controller="leaderboardController">
 					<table style-"text-align:center" class="table table-striped table-hover">
 						<thead>
-										<th style="text-align:center">Player</th>
-										<th style="text-align:center">Rank</th>
+										<th>Rank</th>
+										<th>Player</th>
+										<th>Score</th>
+										<th>Score Delta</th>
 								</thead>
 							<tbody>
                     <tr ng-repeat="rankedPlayer in rankedPlayers" ng-click="getPlayerDetail(rankedPlayer)">
-                        <td ng-bind="getName(rankedPlayer)" style="text-align:center"></td>
-                        <td ng-bind="rankedPlayer.PlayerRank.Value" style="text-align:center"/>
+												<td ng-bind="$index+1"/>
+												<td ng-bind="getName(rankedPlayer)"></td>
+												<td ng-bind="getRankCol(rankedPlayer)"/>
+												<td ng-bind="getRankDeltaCol(rankedPlayer)"/>
                     </tr>
                 </tbody>
             </table>
