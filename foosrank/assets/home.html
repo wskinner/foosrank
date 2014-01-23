@@ -67,7 +67,13 @@
                 bottom: 0;
                 width: 100%;
                 height: 141px;
-            }	
+							}	
+						.red {
+							color: red;
+						}
+						.green {
+							color: green;
+						}
         </style>
         <title>Foosball Leaderboard</title>
     </head>
@@ -86,7 +92,7 @@
 												<td ng-bind="$index+1"/>
 												<td ng-bind="getName(rankedPlayer)"></td>
 												<td ng-bind="getRankCol(rankedPlayer)"/>
-												<td ng-bind="getRankDeltaCol(rankedPlayer)"/>
+													<td ng-class="{red: rankedPlayer.PlayerRankDelta < 0, green: rankedPlayer.PlayerRankDelta > 0}" ng-bind="getRankDeltaCol(rankedPlayer)"/>
                     </tr>
                 </tbody>
             </table>
