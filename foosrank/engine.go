@@ -34,7 +34,7 @@ func RunServer(leaderboardChan chan []RankedPlayer) {
 	}()
 	http.HandleFunc("/", homeHandler)
 	http.HandleFunc("/ws", wsHandler)
-	http.HandleFunc("/players/", playersHandler)
+	//http.HandleFunc("/players/", playersHandler)
 	if err := http.ListenAndServe(*addr, nil); err != nil {
 		log.Fatal("ListenAndServe:", err)
 	}

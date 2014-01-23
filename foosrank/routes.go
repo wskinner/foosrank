@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"github.com/gorilla/websocket"
-	"strings"
+	//"strings"
 	"go/build"
 	"path/filepath"
 	"html/template"
@@ -40,7 +40,7 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 	go c.writer()
 	c.reader()
 }
-
+/*j
 func playersHandler(w http.ResponseWriter, r *http.Request) {
 	url := r.URL
 	split := strings.Split(url.Path, "/")
@@ -51,4 +51,5 @@ func playersHandler(w http.ResponseWriter, r *http.Request) {
 
 	playerTempl.Execute(w, data)
 }
+*/
 

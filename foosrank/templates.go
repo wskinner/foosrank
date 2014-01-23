@@ -1,6 +1,8 @@
+package foosrank
+
 import (
-	"fmt"
-	"html/template"
+//	"html/template"
+//	"path/filepath"
 )
 
 type Opponent struct {
@@ -11,11 +13,12 @@ type Opponent struct {
 
 type PlayerData struct {
 	Player RankedPlayer
-	Opponents [] // 
+	Opponents []Opponent // 
 }
-
-func playersTemplate(uid string) (templ html.Template, data PlayerData) {
-	templ := template.Must(template.ParseFiles(filepath.Join(defaultAssetPath(), "players.html")))
-	data := // get games from db
-
+/*
+func playersTemplate(uid string) (templ template.Template, data PlayerData) {
+	templ = template.Must(template.ParseFiles(filepath.Join(defaultAssetPath(), "players.html")))
+	//data = // get games from db
+	return nil, nil
 }
+*/
