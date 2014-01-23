@@ -1,5 +1,5 @@
-package foosrank
-
-import (
-	"encoding"
+//package foosrank
+//
+//import (
+//	"encoding"
 
