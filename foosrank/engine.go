@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	addr = flag.String("addr", ":8080", "http service address")
+	addr = flag.String("addr", ":80", "http service address")
 )
 
 func RunServer(leaderboardChan chan []RankedPlayer) {
