@@ -23,9 +23,9 @@
 								$scope.getRankDeltaCol = function (rankedPlayer) {
 									var val = Math.round(rankedPlayer.PlayerRankDelta)
 									if (val > 0) {
-										var result = val + " \u21E1"
+										var result = "\u21E1 " + Math.abs(val) 
 									} else {
-										var result = val + " \u21E3"
+										var result = "\u21E3 " + Math.abs(val)
 									}
 									return result
 								}
@@ -79,7 +79,7 @@
 										<th>Rank</th>
 										<th>Player</th>
 										<th>Score</th>
-										<th>Score Delta</th>
+										<th>&#x0394;</th>
 								</thead>
 							<tbody>
                     <tr ng-repeat="rankedPlayer in rankedPlayers" ng-click="getPlayerDetail(rankedPlayer)">
