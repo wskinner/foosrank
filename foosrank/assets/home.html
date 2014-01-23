@@ -24,8 +24,8 @@
                     return result
                 }
 
-                if (window["WebSocket"]) {
-                    conn = new WebSocket("ws://{{$}}/ws");
+								if (window["WebSocket"]) {
+                    conn = new WebSocket("ws://"+location.host+"/ws");
                     conn.onclose = function(evt) {
                         console.log("connection closed")
                     }
@@ -84,15 +84,18 @@
 				<div id="leaderboardContainer" ng-controller="leaderboardController">
 					<table id="leaderboard" class="table table-hover">
 						<thead>
-										<th>Rank</th>
 										<th>Player</th>
 										<th>Score</th>
 										<th>&#x0394;</th>
 								</thead>
 							<tbody>
                     <tr ng-repeat="rankedPlayer in rankedPlayers" ng-click="getPlayerDetail(rankedPlayer)">
-												<td ng-bind="$index+1"/>
-                                                <td ng-bind="getName(rankedPlayer)">
+												<td>
+													<span class="badge">
+														{{$index+1}}
+													</span>
+													{{getName(rankedPlayer)}}	
+												</td>
 												<td ng-bind="rankedPlayer.PlayerRank.Value"/>
 												<td ng-class="{red: rankedPlayer.PlayerRankDelta < 0, green: rankedPlayer.PlayerRankDelta > 0}" ng-bind="getRankDeltaCol(rankedPlayer)"/>
                     </tr>
