@@ -7,7 +7,7 @@ import (
 	"strings"
 	"go/build"
 	"path/filepath"
-	"text/template"
+	"html/template"
 )
 
 
@@ -46,8 +46,9 @@ func playersHandler(w http.ResponseWriter, r *http.Request) {
 	split := strings.Split(url.Path, "/")
 	uid := split[len(split)-1]
 	fmt.Println("uid: ", uid)
+	//
+	playerTempl, data := playersTemplate(uid)
 
-	playerTempl := template.Must(template.ParseFiles(filepath.Join(defaultAssetPath(), "players.html")))
-	playerTempl.Execute(w, r.Host)
+	playerTempl.Execute(w, data)
 }
 
