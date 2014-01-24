@@ -13,5 +13,6 @@ CREATE TABLE IF NOT EXISTS Games (
     WinnerScore INTEGER,
     LoserScore INTEGER,
     GameId INTEGER,
+    Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(WinnerId) REFERENCES Players(id)
     FOREIGN KEY(LoserId) REFERENCES Players(id));
