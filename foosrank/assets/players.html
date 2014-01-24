@@ -8,7 +8,15 @@
 							console.log("controller loaded")
                 $scope.getName = function (player) {
                     return player.FirstName + " " + player.LastName
-                }
+								}
+
+								$scope.getSum = function(fName) {
+									var s = 0
+										for (var i = 0; i < opponents.length; i++) {
+											s += opponents[i][fName]
+										}
+									return s
+								}
 								
 								var url = document.URL.split("/")
 								var uid = url[url.length-1]
@@ -51,21 +59,30 @@
     </head>
     <body>
         <div align=center id="opponentsContainer" ng-controller="opponentsController">
-            <table class="table table-striped table-hover">
-							<tbody>
+					<table class="table table-striped table-hover">
+						<thead>
 										<th>Opponent</th>
 										<th>Wins</th>
 										<th>Losses</th>
 										<th>My Average Points</th>
 										<th>Their Average Points</th>
+							</thead>
+							<tbody>
 										<tr ng-repeat="opp in opponents">
                         <td ng-bind="getName(opp.Player)"/>
                         <td ng-bind="opp.WinsAgainst"></td>
                         <td ng-bind="opp.LossesAgainst"/>
                         <td ng-bind="opp.MyTotalPoints / (opp.WinsAgainst + opp.LossesAgainst)"/>
                         <td ng-bind="opp.TheirTotalPoints / (opp.WinsAgainst + opp.LossesAgainst)"/>
-                    </tr>
-                </tbody>
+												</tr>
+												<tr>
+													<td>Totals</td>
+													<td ng-bind="getSum('WinsAgainst')"/>
+													<td ng-bind="getSum('LossesAgainst')"/>
+														<td ng-bind="getSum('MyTotalPoints')/(getSum('WinsAgainst') + getSum('LossesAgainst'))"/>
+														<td ng-bind="getSum('TheirTotalPoints')/(getSum('WinsAgainst') + getSum('LossesAgainst'))"/>
+									</tr>
+							</tbody>
             </table>
         </div>
     </body>
