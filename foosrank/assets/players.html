@@ -10,12 +10,12 @@
                     return player.FirstName + " " + player.LastName
 								}
 
-								$scope.getSum = function(fName) {
+								$scope.getSum = function(fName, ls) {
 									var s = 0
-										for (var i = 0; i < opponents.length; i++) {
-											s += opponents[i][fName]
+										for (var i = 0; i < ls.length; i++) {
+											s += ls[i][fName]
 										}
-									return s
+									return parseFloat(s.toFixed(1))
 								}
 								
 								var url = document.URL.split("/")
@@ -54,7 +54,10 @@
                 bottom: 0;
                 width: 100%;
                 height: 141px;
-            }	
+							}	
+							.blue {
+								color: blue;
+							}
 					</style>
 
     </head>
@@ -65,8 +68,8 @@
 										<th>Opponent</th>
 										<th>Wins</th>
 										<th>Losses</th>
-										<th>My Average Points</th>
-										<th>Their Average Points</th>
+										<th>Average Points</th>
+										<th>Opponent Average Points</th>
 							</thead>
 							<tbody>
 										<tr ng-repeat="opp in opponents">
@@ -77,12 +80,12 @@
                         <td ng-bind="opp.TheirTotalPoints / (opp.WinsAgainst + opp.LossesAgainst)"/>
 												</tr>
 												<tr>
-													<td>Totals</td>
-													<td ng-bind="getSum('WinsAgainst')"/>
-													<td ng-bind="getSum('LossesAgainst')"/>
-														<td ng-bind="getSum('MyTotalPoints')/(getSum('WinsAgainst') + getSum('LossesAgainst'))"/>
-														<td ng-bind="getSum('TheirTotalPoints')/(getSum('WinsAgainst') + getSum('LossesAgainst'))"/>
-									</tr>
+													<td class="blue">Totals</td>
+													<td class="blue" ng-bind="getSum('WinsAgainst',opponents)"/>
+													<td class="blue" ng-bind="getSum('LossesAgainst', opponents)"/>
+														<td class="blue" ng-bind="getSum('MyTotalPoints', opponents)/(getSum('WinsAgainst', opponents) + getSum('LossesAgainst', opponents))"/>
+														<td class="blue" ng-bind="(getSum('TheirTotalPoints', opponents)/(getSum('WinsAgainst', opponents) + getSum('LossesAgainst', opponents))).toFixed(2)"/>
+														</tr>
 							</tbody>
             </table>
         </div>
