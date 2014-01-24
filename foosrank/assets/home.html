@@ -52,14 +52,20 @@
         </script>
         <style type="text/css">
             body { background-color: white; }
-            #leaderboardLabel { text-align: center; color: blue; font-size: 40px; }
+            #leaderboardLabel { text-align: center; font-size: 40px; }
             #leaderboardContainer { 
                 font-size: 20px; 
-                text-align:center;
                 margin: auto;
                 width: 75%;
-            }
-            .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+							}
+						#leaderboard {
+							font-size: 20px;
+						}
+						#rankBadge {
+							font-size: 20px;
+							background-color: green;
+						}
+						.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
                   background-color: #B8E2EF;
             }
             Footer {
@@ -91,7 +97,7 @@
 							<tbody>
                     <tr ng-repeat="rankedPlayer in rankedPlayers" ng-click="getPlayerDetail(rankedPlayer)">
 												<td>
-													<span class="badge">
+													<span id="rankBadge" class="badge">
 														{{$index+1}}
 													</span>
 													{{getName(rankedPlayer)}}	

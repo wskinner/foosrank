@@ -152,7 +152,7 @@ func getAllOpponents(uid string, connection *sqlite.Conn) (opponents []Opponent)
         for ; query.Next() ; {
         	player := Player{}
         	opp := Opponent{}
-		err = query.Scan(&player.FirstName, &player.LastName, &opp.MyTotalPoints, &opp.TheirTotalPoints, &opp.LossessAgainst, &player.PlayerId)
+		err = query.Scan(&player.FirstName, &player.LastName, &opp.MyTotalPoints, &opp.TheirTotalPoints, &opp.LossesAgainst, &player.PlayerId)
 		if err != nil { 
 			fmt.Printf("Error: %v\n", err)
 			//continue
