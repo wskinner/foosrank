@@ -68,6 +68,7 @@ func ping() ([]byte, error) {
 }
 
 func (h *hub) run() {
+	conn := getDatabaseConnection()
 	for {
 		select {
 		case c := <-h.register:
@@ -103,13 +104,13 @@ func (h *hub) run() {
 			}
 		case uid := <-h.updatedUids:
 			if val,ok := h.pConnections[uid]; ok {
-				updatePlayerPage(val, uid)
+				updatePlayerPage(val, uid, conn)
 			}
 		case s := <-h.pRegister:
 			fmt.Println("New client connected to a player page.")
 			h.pConnections[s.Uid] = s.Conn
 			h.pConnectionsSet[s.Conn] = s.Uid
-			updatePlayerPage(s.Conn, s.Uid)
+			updatePlayerPage(s.Conn, s.Uid, conn)
 		case c := <-h.pUnregister:
 			fmt.Println("Client disconnected from player page")
 			delete(h.pConnections, h.pConnectionsSet[c])

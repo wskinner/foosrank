@@ -1,6 +1,7 @@
 package foosrank
 import (
 	"encoding/json"
+	"code.google.com/p/gosqlite/sqlite"
 )
 
 type Opponent struct {
@@ -11,16 +12,9 @@ type Opponent struct {
 	TheirTotalPoints int
 }
 
-type PlayerData struct {
-	Player RankedPlayer
-	Opponents []Opponent
-}
-
 // Retrieve the appropriate data from the db, then serialize and send it to the connection
-func updatePlayerPage(conn *connection, uid string) {
-	//p1 := Player{"Will", "Skinner", "willskinner"}
-	p2 := Player{"Michael", "Schiff", "michaelschiff"}
-	data := []Opponent{Opponent{Player: p2}}
+func updatePlayerPage(conn *connection, uid string, dbConn *sqlite.Conn) {
+	data := getAllOpponents(uid, dbConn)
 	bytes, _ := json.Marshal(data)
 	conn.send <- bytes
 }

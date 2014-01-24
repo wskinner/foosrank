@@ -56,14 +56,14 @@
 										<th>Opponent</th>
 										<th>Wins</th>
 										<th>Losses</th>
-										<th>My Total Points</th>
-										<th>Their Total Points</th>
+										<th>My Average Points</th>
+										<th>Their Average Points</th>
 										<tr ng-repeat="opp in opponents">
                         <td ng-bind="getName(opp.Player)"/>
                         <td ng-bind="opp.WinsAgainst"></td>
                         <td ng-bind="opp.LossesAgainst"/>
-                        <td ng-bind="opp.MyTotalPoints"/>
-                        <td ng-bind="opp.TheirTotalPoints"/>
+                        <td ng-bind="opp.MyTotalPoints / (opp.WinsAgainst + opp.LossesAgainst)"/>
+                        <td ng-bind="opp.TheirTotalPoints / (opp.WinsAgainst + opp.LossesAgainst)"/>
                     </tr>
                 </tbody>
             </table>
