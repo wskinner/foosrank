@@ -1,34 +1,36 @@
-
 <html ng-app>
     <head>
         <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"/>
         <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.8/angular.min.js"></script>
-            <script type="text/javascript">
+        <script type="text/javascript">
             var opponentsController = function($scope, $window) {
-							console.log("controller loaded")
+                console.log("controller loaded")
+                    
                 $scope.getName = function (player) {
                     return player.FirstName + " " + player.LastName
-								}
+                }
 
-								$scope.getSum = function(fName, ls) {
-									var s = 0
-										for (var i = 0; i < ls.length; i++) {
-											s += ls[i][fName]
-										}
-									return parseFloat(s.toFixed(1))
-								}
+				$scope.getSum = function(fName, ls) {
+				    var s = 0
+                    for (var i = 0; i < ls.length; i++) {
+                        s += ls[i][fName]
+                    }
+                    return parseFloat(s.toFixed(1))
+				}
 								
-								var url = document.URL.split("/")
-									var uid = url[url.length-1]
-									$scope.uid = uid
+                var url = document.URL.split("/")
+                var uid = url[url.length-1]
+                $scope.uid = uid
+                                    
                 if (window["WebSocket"]) {
-                    conn = new WebSocket("ws://{{$}}/pws/"+uid);
+                    conn = new WebSocket("ws://"+location.host+"/pws/"+uid);
                     conn.onclose = function(evt) {
                         console.log("connection closed")
                     }
                     conn.onmessage = function(evt) {
                         console.log("got data: " + evt.data)
-                            var opponents = JSON.parse(evt.data);
+                        var opponents = JSON.parse(evt.data);
                         if (opponents.Ping != null) {
                             msg = JSON.stringify({"Pong": "true"});
                             console.log("sending msg: " + msg)
@@ -38,60 +40,65 @@
                         $scope.opponents = opponents;
                         $scope.$apply()
                         console.log($scope.opponents)
-										}
-								}
-						}
-
+					}
+				}
+		    }
         </script>
         <style type="text/css">
-            body { background-color: white; }
-            #leaderboardLabel { text-align: center; color: blue; font-size: 40px; }
-						#leaderboard { text-align: center; color: navy; font-size: 20px; }
+            body { 
+                background-color: white;
+            }
+            #leaderboardLabel { 
+                text-align: center; color: blue; font-size: 40px; 
+            }
+			#leaderboard { 
+                text-align: center; color: navy; font-size: 20px; 
+            }
             Footer {
-								text-align: center;
+				text-align: center;
                 display:block;
                 position: absolute;
                 bottom: 0;
                 width: 100%;
                 height: 141px;
-							}	
-							.blue {
-								color: blue;
-							}
-					</style>
+            }    
+        </style>
 
-    </head>
-    <body>
-        <div align=center id="opponentsContainer" ng-controller="opponentsController">
-					<table class="table table-striped table-hover">
-						<thead>
-										<th>Opponent</th>
-										<th>Wins</th>
-										<th>Losses</th>
-										<th>Average Points</th>
-										<th>Opponent Average Points</th>
-							</thead>
-							<tbody>
-										<tr ng-repeat="opp in opponents">
-                        <td ng-bind="getName(opp.Player)"/>
-                        <td ng-bind="opp.WinsAgainst"></td>
-                        <td ng-bind="opp.LossesAgainst"/>
-                        <td ng-bind="opp.MyTotalPoints / (opp.WinsAgainst + opp.LossesAgainst)"/>
-                        <td ng-bind="opp.TheirTotalPoints / (opp.WinsAgainst + opp.LossesAgainst)"/>
-												</tr>
-												<tr>
-													<td class="blue">Totals</td>
-													<td class="blue" ng-bind="getSum('WinsAgainst',opponents)"/>
-													<td class="blue" ng-bind="getSum('LossesAgainst', opponents)"/>
-														<td class="blue" ng-bind="getSum('MyTotalPoints', opponents)/(getSum('WinsAgainst', opponents) + getSum('LossesAgainst', opponents))"/>
-														<td class="blue" ng-bind="(getSum('TheirTotalPoints', opponents)/(getSum('WinsAgainst', opponents) + getSum('LossesAgainst', opponents))).toFixed(2)"/>
-														</tr>
-							</tbody>
-            </table>
-        </div>
-    </body>
-    <footer>
-        <p>Created By: <a href="https://github.com/wskinner">Will Skinner</a> & <a href="https://github.com/michaelschiff">Michael Schiff</a></p>
-	    <a href="https://github.com/wskinner/foosrank" >Source Code</a>
-    </footer> 
+        </head>
+        <body>
+            <ul class="nav nav-tabs">
+                <li><a href="#WinsLosses" data-toggle="tab">Wins/Losses</a></li>
+            </ul>
+            <div align=center id="opponentsContainer" ng-controller="opponentsController">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <th>Opponent</th>
+                        <th>Wins</th>
+                        <th>Losses</th>
+                        <th>My Average Points</th>
+                        <th>Their Average Points</th>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="opp in opponents">
+                            <td ng-bind="getName(opp.Player)"/>
+                            <td ng-bind="opp.WinsAgainst"></td>
+                            <td ng-bind="opp.LossesAgainst"/>
+                            <td ng-bind="opp.MyTotalPoints / (opp.WinsAgainst + opp.LossesAgainst)"/>
+                            <td ng-bind="opp.TheirTotalPoints / (opp.WinsAgainst + opp.LossesAgainst)"/>
+                        </tr>
+                        <tr>
+                            <td>Totals</td>
+                            <td ng-bind="getSum('WinsAgainst')"/>
+                            <td ng-bind="getSum('LossesAgainst')"/>
+                            <td ng-bind="getSum('MyTotalPoints')/(getSum('WinsAgainst') + getSum('LossesAgainst'))"/>
+                            <td ng-bind="getSum('TheirTotalPoints')/(getSum('WinsAgainst') + getSum('LossesAgainst'))"/>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </body>
+        <footer>
+            <p>Created By: <a href="https://github.com/wskinner">Will Skinner</a> & <a href="https://github.com/michaelschiff">Michael Schiff</a></p>
+	        <a href="https://github.com/wskinner/foosrank" >Source Code</a>
+        </footer> 
 </html>
