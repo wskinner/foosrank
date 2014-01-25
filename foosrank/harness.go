@@ -3,6 +3,8 @@ package foosrank
 import (
     "fmt"
     "sort"
+    "time"
+    "code.google.com/p/gosqlite/sqlite"
 )
 
 type rankedPlayerSlice []*RankedPlayer
@@ -71,13 +73,26 @@ func RankGames (gamesChan chan Game, rankingFunc RankingFunction, leaderboardCha
     mapGames(getRankingMapFunction(rankingFunc), dbConnection)
     sort.Sort(leaderboard)
     leaderboardChan <- convertToValues(leaderboard)
-
     for game := range gamesChan {
-       addGameToDb(game, dbConnection)
-       updateGame(game, rankingFunc)
-       sort.Sort(leaderboard)
-       leaderboardChan <- convertToValues(leaderboard)
+    	addGameUpdateLeaders(game, rankingFunc, dbConnection, 0)
+    	leaderboardChan <- convertToValues(leaderboard)
     }
+}
+
+func addGameUpdateLeaders(game Game, rankingFunc RankingFunction, connection *sqlite.Conn, retryTimes int) {
+  err := addGameToDb(game, connection)
+  if (err == nil) {
+    updateGame(game, rankingFunc)
+    sort.Sort(leaderboard)
+  } else {
+    if (retryTimes < 3) {
+      dur, _ := time.ParseDuration("100ms")
+      time.Sleep(dur)
+      addGameUpdateLeaders(game, rankingFunc, connection, retryTimes+1)
+    } else {
+      fmt.Printf("Unable to add game: %v after 3 tries\n", game)
+    }
+  }
 }
 
 func convertToValues(x rankedPlayerSlice) []RankedPlayer {

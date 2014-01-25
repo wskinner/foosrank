@@ -49,15 +49,13 @@ func getPlayerForId(id int, connection *sqlite.Conn) Player {
 }
 
 
-func addGameToDb(game Game, connection *sqlite.Conn) {
+func addGameToDb(game Game, connection *sqlite.Conn) error {
     fmt.Printf("Adding Game: %v\n", game)
     winnerId := getPlayerDbId(game.Winner, connection)
     loserId := getPlayerDbId(game.Loser, connection)
     sql := fmt.Sprintf("INSERT INTO Games(id, winnerId, loserId, WinnerScore, LoserScore, GameId) VALUES(NULL, %v, %v, %v, %v, %v);", winnerId, loserId, game.WinnerScore, game.LoserScore, game.GameId)
     err := connection.Exec(sql)
-    if (err != nil) {
-        fmt.Printf("Error adding %v: [%v]\n", game, err)
-    }
+    return err
 }
 
 
@@ -138,8 +136,6 @@ func getAllOpponents(uid string, connection *sqlite.Conn) (opponents []Opponent)
 			//continue
 		}
 		opp.Player = player
-		fmt.Println(player)
-		fmt.Println(opp)
 		results[player.PlayerId] = &opp
         }
 
@@ -158,8 +154,6 @@ func getAllOpponents(uid string, connection *sqlite.Conn) (opponents []Opponent)
 			//continue
 		}
 		opp.Player = player
-		fmt.Println(player)
-		fmt.Println(opp)
 		if val,ok := results[player.PlayerId]; !ok {
 			results[player.PlayerId] = &opp
 		} else {
@@ -168,6 +162,7 @@ func getAllOpponents(uid string, connection *sqlite.Conn) (opponents []Opponent)
         }
         for _,v := range results {
         	opponents = append(opponents, *v)
+		fmt.Println(*v)
         }
         return opponents
 }
