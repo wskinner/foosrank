@@ -1,20 +1,21 @@
-<html ng-app>
+<html ng-app="playerPage">
     <head>
         <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
-        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"/>
         <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.8/angular.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.10.0/ui-bootstrap-tpls.min.js"></script>
         <script type="text/javascript">
-            var opponentsController = function($scope, $window) {
+            var module = angular.module('playerPage', ['ui.bootstrap']).
+            controller('opponentsController', function($scope, $window) {
                 console.log("controller loaded")
-                    
+                $scope.opponents = []    
                 $scope.getName = function (player) {
                     return player.FirstName + " " + player.LastName
                 }
 
-				$scope.getSum = function(fName, ls) {
+				$scope.getSum = function(fName) {
 				    var s = 0
-                    for (var i = 0; i < ls.length; i++) {
-                        s += ls[i][fName]
+                    for (var i = 0; i < $scope.opponents.length; i++) {
+                        s += $scope.opponents[i][fName]
                     }
                     return parseFloat(s.toFixed(1))
 				}
@@ -25,6 +26,7 @@
                                     
                 if (window["WebSocket"]) {
                     conn = new WebSocket("ws://"+location.host+"/pws/"+uid);
+                    console.log(conn)
                     conn.onclose = function(evt) {
                         console.log("connection closed")
                     }
@@ -41,8 +43,10 @@
                         $scope.$apply()
                         console.log($scope.opponents)
 					}
-				}
-		    }
+                } else {
+                    console.log("browser does not support websockets")
+                }
+		    });
         </script>
         <style type="text/css">
             body { 
@@ -65,36 +69,52 @@
         </style>
 
         </head>
-        <body>
-            <ul class="nav nav-tabs">
-                <li><a href="#WinsLosses" data-toggle="tab">Wins/Losses</a></li>
-            </ul>
-            <div align=center id="opponentsContainer" ng-controller="opponentsController">
-                <table class="table table-striped table-hover">
-                    <thead>
-                        <th>Opponent</th>
-                        <th>Wins</th>
-                        <th>Losses</th>
-                        <th>My Average Points</th>
-                        <th>Their Average Points</th>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="opp in opponents">
-                            <td ng-bind="getName(opp.Player)"/>
-                            <td ng-bind="opp.WinsAgainst"></td>
-                            <td ng-bind="opp.LossesAgainst"/>
-                            <td ng-bind="opp.MyTotalPoints / (opp.WinsAgainst + opp.LossesAgainst)"/>
-                            <td ng-bind="opp.TheirTotalPoints / (opp.WinsAgainst + opp.LossesAgainst)"/>
-                        </tr>
-                        <tr>
-                            <td>Totals</td>
-                            <td ng-bind="getSum('WinsAgainst')"/>
-                            <td ng-bind="getSum('LossesAgainst')"/>
-                            <td ng-bind="getSum('MyTotalPoints')/(getSum('WinsAgainst') + getSum('LossesAgainst'))"/>
-                            <td ng-bind="getSum('TheirTotalPoints')/(getSum('WinsAgainst') + getSum('LossesAgainst'))"/>
-                        </tr>
-                    </tbody>
-                </table>
+        <body ng-controller="opponentsController">
+            <div id="opponentsContainer">
+                <accordion close-others="oneAtATime">
+                    <accordion-group heading="Wins/Losses" is-open="true">
+                        <table class="table">
+                            <thead>
+                                <th>Opponent</th>
+                                <th>Wins</th>
+                                <th>Losses</th>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="opp in opponents">
+                                    <td ng-bind="getName(opp.Player)"/>
+                                    <td ng-bind="opp.WinsAgainst"/>
+                                    <td ng-bind="opp.LossesAgainst">
+                                </tr>
+                                <tr>
+                                    <td>Total</td>
+                                    <td ng-bind="getSum('WinsAgainst')"/>
+                                    <td ng-bind="getSum('LossesAgainst')"/>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </accordion-group>
+                    <accordion-group heading="Points">
+                        <table class="table">
+                            <thead>
+                                <th>Opponent</th>
+                                <th>{{uid}}'s Average</th>
+                                <th>Opponent's Average</th>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="opp in opponents">
+                                    <td ng-bind="getName(opp.Player)"/>
+                                    <td ng-bind="opp.MyTotalPoints / (opp.WinsAgainst + opp.LossesAgainst)"/>
+                                    <td ng-bind="opp.TheirTotalPoints / (opp.WinsAgainst + opp.LossesAgainst)"/>
+                                </tr>
+                                <tr>
+                                    <td>Average accross opponents</td>
+                                    <td ng-bind="getSum('MyTotalPoints')/(getSum('WinsAgainst')+getSum('LossesAgainst'))"/>
+                                    <td ng-bind="getSum('TheirTotalPoints')/(getSum('WinsAgainst')+getSum('LossesAgainst'))"/>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </accordion-group>
+                </accordion>
             </div>
         </body>
         <footer>

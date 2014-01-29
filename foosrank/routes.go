@@ -7,7 +7,6 @@ import (
 	"strings"
 	"go/build"
 	"path/filepath"
-	"html/template"
 )
 
 
@@ -64,6 +63,7 @@ func playersWsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func playersHandler(w http.ResponseWriter, r *http.Request) {
-	playerTempl := template.Must(template.ParseFiles(filepath.Join(defaultAssetPath(), "players.html")))
-	playerTempl.Execute(w, r.Host)
+	//playerTempl := template.Must(template.ParseFiles(filepath.Join(defaultAssetPath(), "players.html")))
+	//playerTempl.Execute(w, r.Host)
+    http.ServeFile(w, r, filepath.Join(defaultAssetPath(), "players.html"))
 }
