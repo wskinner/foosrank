@@ -5,10 +5,15 @@ import (
     "code.google.com/p/gosqlite/sqlite"
 )
 
-func getDatabaseConnection() *sqlite.Conn {
+//returns a function that returns a reference to a sqlite connection
+func createConnectionFunction() func() *sqlite.Conn {
     c, _ := sqlite.Open("games.db")
-    return c
+    return func() *sqlite.Conn {
+        return c
+    }
 }
+//getDatabaseConnection is a function of no args that always returns the same connection
+var getDatabaseConnection = createConnectionFunction()
 
 func mapGames(mapper func(Game), connection *sqlite.Conn) {
     var game Game
