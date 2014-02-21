@@ -42,7 +42,7 @@ func pollTwitter(api *anaconda.TwitterApi) []anaconda.Tweet {
 	//v := url.Values{}
 
 	// should be more than enough
-	// v.Set("count", "")
+	v.Set("count", "199")
 	mentions, _ := api.GetStatusesMentionsTimeline(v)
 	sort.Sort(anaconda.ById(mentions))
 	if len(mentions) == 1 {
